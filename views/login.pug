@@ -1,0 +1,16 @@
+extends base
+block script 
+    script(defer src="/src/js/login.js") 
+block content   
+    .login
+        form.login-form()
+            .logo-box
+                img(src='/src/images/annkLogo.jpeg' alt='ANNK Logo' srcset='')
+            .username-box.box
+                ion-icon(name='people-outline')
+                input.username(type='text' title='Enter username' name='email' placeholder='Enter username')
+            .password-box.box
+                ion-icon(name='lock-closed-outline')
+                input.username(type='password' name='password' title='Enter password' placeholder='Enter password')
+            .btn-box
+                button.btn-login login 

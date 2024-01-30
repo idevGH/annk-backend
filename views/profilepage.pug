@@ -1,0 +1,134 @@
+extends base
+block script 
+    script(defer src="/src/js/profilePage.js") 
+block content
+    .member-container
+        .menu-side-bar
+            .profile-box
+                .profile-box-pic
+                    img.user-img(src=`/${user.photo}` alt=`${user.name} photo`)
+                h3.username T/Dr. #{user.name}
+                a.link.edit-profile-link(href=`/member/${user._id}/editDetails`)
+                    | Edit profile 
+                    ion-icon(name='pencil-outline')
+        .dashboard-area
+            header.dashboard-area-header
+                ul.dashboard-area-header-menu
+                    li.dashboard-area-header-menu-item.selected
+                        ion-icon(name='person-outline')
+                        | Profile
+                    li.dashboard-area-header-menu-item
+                        ion-icon(name='calculator-outline')
+                        | Accounts
+            .dashboard-area-slide-container
+                .slide.profile-box
+                    .user-picture
+                        //- img(src=`/${photo}` alt=`${name.split(" ")[0]}'s photo` srcset='')
+                        //- img(src=`/${qrCode}` alt=`` srcset='')
+                    .details
+                        .personal-details
+                            h3.name
+                                span
+                                    ion-icon(name='person-circle-outline')
+                                span T/Dr. #{user.name}
+                            h3.Email
+                                span
+                                    ion-icon(name='mail-open-outline')
+                                span #{user.email}
+                            h3.dob
+                                span
+                                    ion-icon(name='calendar-outline')
+                                span #{user.dob}
+                            h3.personal-digital-address
+                                span
+                                    ion-icon(name='navigate-circle-outline')
+                                span #{user.digitalAddress}
+                            h3.personal-location
+                                span
+                                    ion-icon(name='business-outline')
+                                span #{user.placeOfBirth}
+                            h3.telephone
+                                span
+                                    ion-icon(name='call-outline')
+                                span #{user.phoneNumber}
+                            h3.nationality
+                                span
+                                    ion-icon(name='globe-outline')
+                                span #{user.nationality}
+                        .company-details
+                            h3.company-name
+                                span
+                                    ion-icon(name='medkit-outline')
+                                span #{user.companyName}
+                            h3.personal-digital-address
+                                span
+                                    ion-icon(name='navigate-circle-outline')
+                                span #{user.companyLocation}
+                .slide.account-box
+                    header.account-box-header
+                        h3.filter-by
+                            | Filter 
+                            ion-icon(name='funnel')
+                        select#years-filter.years(name='years-filter')
+                            option(value='2023') 2023
+                            option(value='2024') 2024
+                    .account-box-dues-container
+                        .per-year
+                            h3.year 2023
+                            .dues
+                                .payment
+                                    h4.month
+                                        span January
+                                        span
+                                            span $5
+                                            span
+                                                | Paid
+                                                ion-icon(name='checkmark-circle')
+                                    h4.month
+                                        span February
+                                        span
+                                            span Not paid
+                                            span
+                                                ion-icon(name='close-outline')
+                                .total-container
+                                    h3.monthly-total
+                                        | Total: 
+                                        span $5
+                        .per-year
+                            h3.year 2024
+                            .dues
+                                .payment
+                                    h4.month
+                                        span March
+                                        span
+                                            span $5
+                                            span
+                                                | Paid
+                                                ion-icon(name='checkmark-circle')
+                                    h4.month
+                                        span July
+                                        span
+                                            span Not paid
+                                            span
+                                                ion-icon(name='close-outline')
+                                .total-container
+                                    h3.monthly-total
+                                        | Total: 
+                                        span $5
+                    .make-payments
+                        form(action='')
+                            input(type='number' name='year' id='' title='Enter year' placeholder='Enter year')
+                            select#month(name='month')
+                                option(value='january') January
+                                option(value='February') February
+                                option(value='March') March
+                                option(value='april') April
+                                option(value='may') May
+                                option(value='june') June
+                                option(value='july') July
+                                option(value='august') August
+                                option(value='september') September
+                                option(value='october') October
+                                option(value='november') November
+                                option(value='december') December
+                            button.make-payment Pay Dues
