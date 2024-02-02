@@ -154,6 +154,10 @@
 .main-header-button-box {
   display: flex;
   gap: 0.4rem;
+  align-items: center;
+}
+.main-header-button-box h4 {
+  color: #fff;
 }
 .main-header-button-box .btn {
   text-decoration: none;
@@ -166,6 +170,10 @@
   font-size: 1.2rem;
   padding: 0.2rem 0.8rem;
   border-radius: 0.6rem;
+}
+.main-header-button-box .btn-logout {
+  background-color: rgb(158, 16, 16);
+  color: #e6e3bf;
 }
 @media only screen and (max-width: 75em) {
   .main-header {
@@ -310,7 +318,7 @@
 
 .dashboard-area-slide-container {
   position: relative;
-  height: 40rem;
+  height: 45rem;
   overflow-x: hidden;
 }
 .dashboard-area-slide-container .slide {
@@ -731,6 +739,197 @@
   }
 }
 
+.scan-page-container {
+  position: relative;
+  width: 35rem;
+  background-color: green;
+  padding: 0.8rem;
+  display: grid;
+  justify-items: center;
+  margin: 0 auto;
+  gap: 0.2rem;
+}
+.scan-page-container .details-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(182, 248, 28, 0.685);
+  height: 10rem;
+  width: 97%;
+  margin: 0 auto;
+  font-weight: 800;
+  color: red;
+  position: relative;
+  z-index: 3;
+  clip-path: polygon(0 0, 100% 0, 100% 50%, 56% 100%, 52% 100%, 0 50%);
+}
+@media only screen and (max-width: 21em) {
+  .scan-page-container .details-header {
+    justify-content: start;
+    padding-top: 1rem;
+    font-size: 1.2rem;
+    height: 7rem;
+    gap: 0.1rem;
+  }
+}
+@media only screen and (max-width: 17em) {
+  .scan-page-container .details-header {
+    font-size: 1rem;
+    height: 4rem;
+  }
+}
+.scan-page-container .profile-pic {
+  display: inline-block;
+  padding: 1rem;
+  background-color: rgb(105, 155, 31);
+  border-radius: 2rem;
+  width: 98%;
+}
+.scan-page-container .profile-pic img {
+  width: 100%;
+  border-radius: inherit;
+}
+.scan-page-container .details-box {
+  font-size: 1.4rem;
+  color: aliceblue;
+  text-align: center;
+}
+.scan-page-container .details-box h4 {
+  display: grid;
+  grid-template-columns: 3fr 7fr;
+  justify-items: end;
+  gap: 0.6rem;
+}
+.scan-page-container .details-box h4 span:nth-child(2) {
+  justify-self: start;
+}
+@media only screen and (max-width: 27em) {
+  .scan-page-container .details-box {
+    font-size: 1rem;
+  }
+}
+@media only screen and (max-width: 21em) {
+  .scan-page-container .details-box {
+    font-size: 0.8rem;
+  }
+}
+@media only screen and (max-width: 27em) {
+  .scan-page-container {
+    width: 100%;
+  }
+}
+
+.signup-details-container {
+  width: 50rem;
+  margin: 0 auto;
+}
+
+.personal-signup-form {
+  background-color: rgba(94, 131, 39, 0.452);
+  width: 100%;
+  padding: 1rem;
+}
+.personal-signup-form .form-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+  font-size: 2.2rem;
+  background-color: azure;
+  padding: 0.4rem 0.8rem;
+}
+.personal-signup-form .personal-signup-form-box {
+  display: grid;
+  grid-template-columns: 3fr 6fr;
+}
+.personal-signup-form .personal-signup-form-box label {
+  font-weight: 800;
+}
+.personal-signup-form .personal-signup-form-box input,
+.personal-signup-form .personal-signup-form-box select {
+  padding: 0.4rem 0.8rem;
+  margin-bottom: 0.8rem;
+}
+.personal-signup-form .personal-signup-form-box img {
+  width: 10rem;
+}
+@media only screen and (max-width: 22em) {
+  .personal-signup-form .personal-signup-form-box {
+    grid-template-columns: 1fr;
+  }
+}
+.personal-signup-form .photo-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+.personal-signup-form .signup-button-box {
+  display: flex;
+  justify-content: end;
+}
+.personal-signup-form .signup-button-box .btn {
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  background-color: red;
+  color: aliceblue;
+  border: none;
+  border-radius: 1rem;
+}
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: orangered;
+  height: 40rem;
+}
+.error-container .message {
+  padding: 1rem;
+  padding-top: 2rem;
+  display: block;
+  color: aliceblue;
+}
+
+.verify-container {
+  background-color: red;
+  width: 45rem;
+  padding: 1rem;
+  margin: 0 auto;
+}
+.verify-container .verify {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 0.6rem;
+}
+.verify-container .verify .form-header {
+  width: 30rem;
+}
+.verify-container .verify .form-header .caption {
+  font-size: 2.8rem;
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.2rem;
+}
+.verify-container .verify .text {
+  font-size: 2.4rem;
+  letter-spacing: 0.6rem;
+  padding: 0.8rem;
+  padding-left: 2rem;
+}
+.verify-container .verify label {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+.verify-container .verify .btn-container .btn {
+  padding: 0.8rem 2.4rem;
+  background-color: greenyellow;
+  border-radius: 1rem;
+  border: none;
+  font-weight: bold;
+}
+
 *,
 *::before,
 *::after {
@@ -746,13 +945,52 @@ html {
 
 body {
   font-size: 1.4rem;
+  background-color: rgba(126, 114, 114, 0.199);
+  color: rgba(31, 25, 25, 0.836);
 }
 
 .main-wrapper {
   margin: 0 auto;
   width: 100dvw;
-  background-color: rgba(126, 114, 114, 0.479);
   padding: 0 0.8rem;
+  position: relative;
+}
+.main-wrapper .message-container {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 35rem;
+  font-size: 1rem;
+  color: #fff;
+  z-index: 3;
+  background-color: red;
+  padding: 1rem;
+  padding-top: 2.8rem;
+  border-radius: 0.8rem;
+}
+.main-wrapper .message-container .close {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.6rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-bottom: 1px solid #fff;
+  color: aliceblue;
+}
+.main-wrapper .message-bkg {
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(27, 19, 19, 0.658);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  backdrop-filter: blur(5px);
+}
+.main-wrapper .hide {
+  display: none;
 }
 @media only screen and (max-width: 76em) {
   .main-wrapper {

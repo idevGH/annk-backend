@@ -5,7 +5,7 @@ head
     title ANNK | 
         -if(user)
             | #{`${user.name.split(" ")[0]}'s profile`}
-    link(rel='shortcut icon' href='./src/images/AANk logo.jpg' type='image/x-icon')
+    link(rel='shortcut icon' href='/src/AANk logo.jpg' type='image/x-icon')
     // Icons CDN
     script(type='module' src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js')
     script(nomodule='' src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js')
@@ -21,14 +21,25 @@ head
     // NavBar
     header.main-header
         .main-header-logo-box
-            a.homepage-link(href=`/member/${_id}`)
-                img(src='/src/images/annkLogo.jpeg' alt='ANNK Logo' srcset='')
-                h3.annk-name ANNK
+            -if(user)
+                a.homepage-link(href=`http://127.0.0.1:8090/member/${user._id}`)
+                    img(src='/src/images/annkLogo.jpeg' alt='ANNK Logo' srcset='')
+                    h3.annk-name ANNK
+            -else
+                a.homepage-link(href=`#`)
+                    img(src='/src/images/annkLogo.jpeg' alt='ANNK Logo' srcset='')
+                    h3.annk-name ANNK
         .main-header-button-box
                 -if(user)
-                    a.btn.btn-login(href='/member/logout') Logout
+                    h4 Hello, #{user.name.split(" ")[0]}
+                    a.btn.btn-logout(href='/member/logout') Logout
                 -else
-                    a.btn.btn-signup(href='signup.html') Signup
-                    a.btn.btn-login(href='/member/login') Login
+                    a.btn.btn-signup(href='http://127.0.0.1:8090/member') Signup
+                    a.btn.btn-login(href='http://127.0.0.1:8090/member/login') Login
+    .message-container.hide
+        .message-wrapper
+             h2.message Hello there
+        button.close Close &times;
+    .message-bkg.hide
 
     block content

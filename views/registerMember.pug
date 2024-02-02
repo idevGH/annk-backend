@@ -1,0 +1,78 @@
+extends base
+block script 
+    script(defer src="/src/js/register.js") 
+block content 
+    .signup-form-container
+        .signup-details-container
+            form.personal-signup-form
+                header.form-header
+                    h3.form-caption
+                    | ANNK REGISTRATION FORM
+                .personal-signup-form-box
+                    label(for='fullname') Name:
+                    input#fullname(type='text' title='signup name' name='name' placeholder='eg. Kwame Appiah' minlength='3')
+                .personal-signup-form-box
+                    label(for='gender') Gender:
+                    select#gender(name='gender')
+                        option(value='male') Male
+                        option(value='female') Female
+                .personal-signup-form-box
+                    label(for='dob') Date of birth:
+                    input#dob(type='date' name='dob' title='Enter date of birth')
+                .personal-signup-form-box
+                    label(for='placeOfBirth') Place of birth:
+                    input#placeOfBirth(type='text' name='placeOfBirth' title='Enter place of birth' placeholder='eg. Techiman' required='')
+                .personal-signup-form-box
+                    label(for='email') Email:
+                    input#Email(type='mail' name='email' title='Enter Email' placeholder='eg. example@gmail.com')
+                .personal-signup-form-box
+                    label(for='nationality') Nationality:
+                    input#nationality(type='text' name='nationality' title='Change nationality' placeholder='eg. Ghanaian' required='')
+                .personal-signup-form-box
+                    label(for='digitalAddress') Digital Address:
+                    input#digitalAddress(type='text' name='digitalAddress' title='Enter Address' placeholder='eg. BX-2657-25')
+                .personal-signup-form-box
+                    label(for='region') Region:
+                    select#region(name='region')
+                        option(value='Ahafo Region') -Select Region-
+                        option(value='Ahafo Region') Ahafo Region
+                        option(value='Ashanti Region') Ashanti Region
+                        option(value='Bono Region') Bono Region
+                        option(value='Bono East Region') Bono East Region
+                        option(value='Central Region') Central Region
+                        option(value='Eastern Region') Eastern Region
+                        option(value='Greater Accra Region') Greater Accra Region
+                        option(value='Northern Region') Northern Region
+                        option(value='North East Region') North East Region
+                        option(value='Oti Region') Oti Region
+                        option(value='Savannah Region') Savannah Region
+                        option(value='Upper East Region') Upper East Region
+                        option(value='Upper West Region') Upper West Region
+                        option(value='Volta Region') Volta Region
+                        option(value='Western Region') Western Region
+                        option(value='Western North Region') Western North Region
+                .personal-signup-form-box
+                    label(for='number') Phone number
+                    input#number(type='text' name='phoneNumber' title='Enter Phone Number' placeholder='eg. 0554562****' minlength='10')
+                .personal-signup-form-box.photo-box
+                    input#photo.photoEl(type='file' name='photo' accept='image/*' style='display: none')
+                    img.new-image(src='' alt='')
+                    label(for='photo')| Choose photo 
+                        ion-icon(name='image-outline')
+                .personal-signup-form-box.company-box
+                    label(for='companyName') Company name:
+                    input#companyName(type='text' name='companyName' title='Change Company Name' placeholder='Enter company name')
+                .personal-signup-form-box
+                    label(for='companyLocation') Company Location:
+                    input#companyLocation(type='text' name='companyLocation' title='Change Company Location' placeholder='eg. Kumasi')
+                .personal-signup-form-box
+                    label(for='phoneNumber') Company number:
+                    input#companyNumber(type='text' name='companyNumber' title='Company Phone Number' placeholder='eg. 02455*****' minlength='10')
+                .personal-signup-form-box.box
+                    label(for='password') Password: 
+                    input#password(type='password' name='password' title='Enter New Password' placeholder='New Password')
+                .personal-signup-form-box.box
+                    label(for='passwordConfirm') Re-enter password:
+                    input#passwordConfirm(type='password' name='passwordConfirm' title='Re-Enter Password' placeholder='Re-Enter Password')
+                .signup-button-box
+                    button.btn.btn-signup Register 

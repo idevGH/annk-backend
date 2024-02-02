@@ -24,7 +24,7 @@ block content
                 .slide.profile-box
                     .user-picture
                         //- img(src=`/${photo}` alt=`${name.split(" ")[0]}'s photo` srcset='')
-                        //- img(src=`/${qrCode}` alt=`` srcset='')
+                        img(src=`/${user.qrCode}` alt=`` srcset='')
                     .details
                         .personal-details
                             h3.name
@@ -62,8 +62,13 @@ block content
                                 span #{user.companyName}
                             h3.personal-digital-address
                                 span
+                                    ion-icon(name='business-outline')
+                                span #{user.companyNumber}
+                            h3.personal-digital-address
+                                span
                                     ion-icon(name='navigate-circle-outline')
                                 span #{user.companyLocation}
+                            
                 .slide.account-box
                     header.account-box-header
                         h3.filter-by

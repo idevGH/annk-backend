@@ -21,7 +21,7 @@ const memberSchema = mongoose.Schema(
     },
     dob: {
       type: Date,
-      required: true,
+      required: [true, "Please provide Date of Birth."],
     },
     nationality: {
       type: String,
@@ -57,13 +57,17 @@ const memberSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    gender: {
+      type: String,
+      required: true,
+    },
     photo: {
       type: String,
-      default: "src/images/profilephotos",
+      default: `userphotos/avatar.jpg`,
     },
     email: {
       type: String,
-      required: true,
+      // required: true,
       validate: {
         validator: validator.isEmail,
         message: "{VALUE} is not a valid email.",
@@ -77,6 +81,12 @@ const memberSchema = mongoose.Schema(
     },
     passwordConfirm: {
       type: String,
+      validate: {
+        validator: function (val) {
+          return val === this.password;
+        },
+        message: "Password mismatched.",
+      },
       required: [true, "Please re-enter password."],
     },
     passwordRestToken: {
@@ -95,6 +105,17 @@ const memberSchema = mongoose.Schema(
     },
     qrCode: {
       type: String,
+    },
+    region: {
+      type: String,
+      required: true,
+    },
+    companyNumber: {
+      type: String,
+    },
+    dateOfRegistration: {
+      type: Date,
+      default: new Date(Date.now()),
     },
   },
   {
@@ -129,7 +150,7 @@ memberSchema.methods.createQRCode = async function (slug) {
 
   qrcode.toFile(
     `./public/qrcodes/${slug}.png`,
-    `https://annk.netlify.app/`,
+    `https://annk.netlify.app/${slug}.html`,
     { type: "png" },
     (err) => {
       console.log(err);

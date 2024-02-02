@@ -1,0 +1,13 @@
+extends base 
+block script 
+    script(defer src="/src/js/verifyNumber.js") 
+block content 
+    .verify-container
+        form.verify(data-userId=`${id}`)
+            header.form-header
+                h3.caption Verify Number
+            .input-box
+                label(for='verifyNumber') Code
+                input#verifyNumber.text(type='text' name='verifyNumber' placeholder='Enter code' maxlength="6")
+            .btn-container
+                button.btn Verify 

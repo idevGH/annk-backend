@@ -10,16 +10,24 @@ memberRouter
   .get(memberController.renderLoginPage)
   .post(memberController.login);
 
-memberRouter.use(memberController.protect);
+memberRouter.route("/").get((req, res, next) => {
+  res.status(200).render("registerMember");
+});
+
 memberRouter
-  .route("/")
+  .route("/register")
   .post(
     memberController.uploadSingleImage,
     memberController.imageManipulate,
     memberController.addMember
   );
+// pay Dues route
+memberRouter.route("/:annkId/paydues").post(memberController.payDues);
+
+memberRouter.use(memberController.protect);
 
 memberRouter.route("/:annkId/editDetails").get(memberController.renderEditpage);
+
 memberRouter
   .route("/:annkId")
   .get(memberController.viewProfile)
@@ -30,6 +38,12 @@ memberRouter
   );
 
 memberRouter
+  .route("/:annkId/verifyNumber")
+  .get(memberController.renderVerifyPage)
+  .post(memberController.verifyNumber);
+
+memberRouter
   .route("/:annkId/updatePassword")
   .post(memberController.updatePassword);
+
 module.exports = memberRouter;

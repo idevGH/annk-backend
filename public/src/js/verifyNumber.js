@@ -1,5 +1,4 @@
-const loginForm = document.querySelector(".login-form");
-const btnLogin = document.querySelector(".btn-login");
+const verifyForm = document.querySelector(".verify");
 const btnClose = document.querySelector(".close");
 
 const messageContainer = document.querySelector(".message-container");
@@ -29,21 +28,29 @@ if (btnClose)
     displayMessage("", false);
   });
 
-loginForm.addEventListener("submit", async function (e) {
-  e.preventDefault();
-  const data = Object.fromEntries([...new FormData(loginForm)]);
-  console.log(JSON.stringify(data));
-  const res = await fetch("/api/v1/member/login", {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-  const resData = await res.json();
+if (verifyForm)
+  verifyForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const { userid } = this.dataset;
+    const data = Object.fromEntries([...new FormData(this)]);
 
-  console.log(resData);
-  if (resData.status === "success")
-    location.assign(`http://127.0.0.1:8090/member/${resData.id}`);
-  else displayMessage(resData.message, true, resData.status);
-});
+    const reqOptions = {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+
+    const res = await fetch(
+      `http://127.0.0.1:8090/api/v1/member/${userid}/verifyNumber`,
+      reqOptions
+    );
+    const resData = await res.json();
+    if (resData.status === "success")
+      location.assign(`http://127.0.0.1:8090/member/${userid}`);
+    else {
+      displayMessage(resData.message, true, resData.status);
+    }
+    console.log(resData);
+  });
