@@ -40,34 +40,73 @@ app.use((error, req, res, next) => {
   console.log(error.message);
   //Validation Error
   if (error.name === "ValidationError") {
-    error.statusCode = 400;
-    error.message = `${Object.values(error[`errors`]).join(",")}.`;
+    error = new AppError(`${Object.values(error[`errors`]).join(",")}.`, 404);
   }
   if (error.code === 11000) {
     // error.statusCode = 400;
     if (
       Object.keys(error).some((propertName) => propertName === "keyPattern")
     ) {
-      error.message = `${Object.values(error.keyValue).join(
-        " "
-      )} is already in use.`;
-    } else if (error.name === "CastError")
-      error = new AppError("ANNK member doesn't exist.", 404);
-    else if (error.message && error.statusCode) error;
-    else {
-      error = new AppError("Ooops! something went wrong.", 500);
+      error = new AppError(
+        `${Object.values(error.keyValue).join(", ")} already exist.`,
+        400
+      );
     }
   }
-  if (req.originalUrl.startsWith("/api"))
-    res.status(error.statusCode || 404).json({
-      status: "failed",
-      message: error.message,
-      error,
-    });
-  else
-    res
-      .status(error.statusCode || 404)
-      .render("errorpage", { message: error.message });
+
+  if (error.name === "CastError")
+    error = new AppError("ANNK member doesn't exist.", 404);
+
+  if (process.env.NODE_ENV === "development") {
+    if (req.originalUrl.startsWith("/api")) {
+      if (error.isOperational) {
+        return res.status(error.statusCode || 404).json({
+          status: "failed",
+          message: error.message,
+        });
+      } else {
+        return res.status(error.statusCode || 404).json({
+          status: "failed",
+          message: "Something went wrong",
+          error,
+        });
+      }
+    } else {
+      if (error.isOperational) {
+        return res
+          .status(error.statusCode || 404)
+          .render("errorpage", { message: error.message });
+      } else {
+        return res.status(error.statusCode || 404).render("errorpage", {
+          message: "Something went wrong, try again later.",
+        });
+      }
+    }
+  } else if (process.env.NODE_ENV === "production") {
+    if (req.originalUrl.startsWith("/api")) {
+      if (error.isOperational) {
+        return res.status(error.statusCode || 404).json({
+          status: "failed",
+          message: error.message,
+        });
+      } else {
+        return res.status(error.statusCode || 404).json({
+          status: "failed",
+          message: "Something went wrong",
+        });
+      }
+    } else {
+      if (error.isOperational) {
+        return res
+          .status(error.statusCode || 404)
+          .render("errorpage", { message: error.message });
+      } else {
+        return res.status(error.statusCode || 404).render("errorpage", {
+          message: "Something went wrong, try again later.",
+        });
+      }
+    }
+  }
 });
 
 module.exports = app;

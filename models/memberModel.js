@@ -16,12 +16,12 @@ const memberSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "Enter your name"],
       minLength: [2, "Name cannot be shorter than 2 characters"],
     },
     dob: {
       type: Date,
-      required: [true, "Please provide Date of Birth."],
+      required: [true, "Please provide Date of Birth"],
     },
     nationality: {
       type: String,
@@ -29,7 +29,7 @@ const memberSchema = mongoose.Schema(
     },
     placeOfBirth: {
       type: String,
-      required: [true, "Please specify where you were born."],
+      required: [true, "Please specify where you were born"],
     },
     digitalAddress: {
       type: String,
@@ -55,11 +55,15 @@ const memberSchema = mongoose.Schema(
     },
     companyLocation: {
       type: String,
-      required: true,
+      required: [true, "Specify Comapny location"],
     },
     gender: {
       type: String,
-      required: true,
+      enum: {
+        values: ["male", "female", "Male", "Female"],
+        message: "Gender can be only Male or Female.",
+      },
+      required: [true, "Specify your Gender [male/female]."],
     },
     photo: {
       type: String,
@@ -108,7 +112,7 @@ const memberSchema = mongoose.Schema(
     },
     region: {
       type: String,
-      required: true,
+      required: [true, "Please specify region"],
     },
     companyNumber: {
       type: String,
@@ -128,12 +132,17 @@ const memberSchema = mongoose.Schema(
   }
 );
 
+//
+memberSchema.pre("findByIdAndUpdate", function (next) {
+  this.options.runValidators = true;
+  next();
+});
+
 // Pre Save middleware
 memberSchema.pre("save", async function (next) {
   // 1. Setting comfirm number code
   this.confirmNumberCode = Math.ceil(Math.random() * 1000000);
-  //   2. Encrypting password
-  this.password = await bcrypt.hash(this.password, 10);
+  // Removing passwordConfirm Field
   this.passwordConfirm = undefined;
   //3: Making slug out the name
   this.slug = slug(this.name);
@@ -164,6 +173,11 @@ memberSchema.methods.comparePassword = async function (
   hashedPassword
 ) {
   return await bcrypt.compare(currentPassword, hashedPassword);
+};
+// Encrypt password
+memberSchema.methods.encryptpassword = async function (rawpassword) {
+  //  Encrypting password
+  return await bcrypt.hash(rawpassword, 10);
 };
 // Creating model
 const memberModel = mongoose.model("Members", memberSchema);

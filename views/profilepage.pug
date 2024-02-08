@@ -1,8 +1,10 @@
 extends base
 block script 
+    script(defer src="https://js.paystack.co/v1/inline.js")
     script(defer src="/src/js/profilePage.js") 
+    link(rel="stylesheet", href="./public/src/style.css")
 block content
-    .member-container
+    .member-container(style="background-color:red;")
         .menu-side-bar
             .profile-box
                 .profile-box-pic
@@ -38,7 +40,7 @@ block content
                             h3.dob
                                 span
                                     ion-icon(name='calendar-outline')
-                                span #{user.dob}
+                                span #{`${Intl.DateTimeFormat("en-GH",{dateStyle:"long"}).format(new Date(user.dob))}`}
                             h3.personal-digital-address
                                 span
                                     ion-icon(name='navigate-circle-outline')
@@ -61,67 +63,83 @@ block content
                                     ion-icon(name='medkit-outline')
                                 span #{user.companyName}
                             h3.personal-digital-address
-                                span
-                                    ion-icon(name='business-outline')
-                                span #{user.companyNumber}
+                                -if(user.companyNumber)
+                                    span
+                                        ion-icon(name='business-outline')
+                                    span #{user.companyNumber}
+                                -else 
+                                    span
+                                        ion-icon(name='business-outline')
+                                    span #{user.phoneNumber}
                             h3.personal-digital-address
                                 span
                                     ion-icon(name='navigate-circle-outline')
                                 span #{user.companyLocation}
-                            
+
                 .slide.account-box
-                    header.account-box-header
-                        h3.filter-by
-                            | Filter 
-                            ion-icon(name='funnel')
-                        select#years-filter.years(name='years-filter')
-                            option(value='2023') 2023
-                            option(value='2024') 2024
-                    .account-box-dues-container
-                        .per-year
-                            h3.year 2023
-                            .dues
-                                .payment
-                                    h4.month
-                                        span January
-                                        span
-                                            span $5
-                                            span
-                                                | Paid
-                                                ion-icon(name='checkmark-circle')
-                                    h4.month
-                                        span February
-                                        span
-                                            span Not paid
-                                            span
-                                                ion-icon(name='close-outline')
-                                .total-container
-                                    h3.monthly-total
-                                        | Total: 
-                                        span $5
-                        .per-year
-                            h3.year 2024
-                            .dues
-                                .payment
-                                    h4.month
-                                        span March
-                                        span
-                                            span $5
-                                            span
-                                                | Paid
-                                                ion-icon(name='checkmark-circle')
-                                    h4.month
-                                        span July
-                                        span
-                                            span Not paid
-                                            span
-                                                ion-icon(name='close-outline')
-                                .total-container
-                                    h3.monthly-total
-                                        | Total: 
-                                        span $5
+                    -const {dues} = user
+                    -if(dues)
+                        header.account-box-header
+                            h3.filter-by
+                                | Filter 
+                                ion-icon(name='funnel')
+                            select#years-filter.years(name='years-filter')
+                                each anualDues in dues
+                                    option(value=`${anualDues._id}`) #{anualDues._id}
+                                    //- option(value='2023') 2023
+                                    //- option(value='2024') 2024
+                        .account-box-dues-container
+                            each anualDues in dues
+                                .per-year
+                                    h3.year #{anualDues._id}
+                                    .dues
+                                        //- -console.log(anualDues)
+                                        .payment
+                                            each dues in anualDues.monthlyPayments
+                                                -if(dues.month)
+                                                    h4.month
+                                                        span #{dues.month}
+                                                        span
+                                                            span $#{dues.amount}
+                                                            span
+                                                                | Paid
+                                                                ion-icon(name='checkmark-circle')
+                                                -else
+                                                    h4.month
+                                                        span #{month}
+                                                        span
+                                                            span Not paid
+                                                            span
+                                                                ion-icon(name='close-outline')
+                                        .total-container
+                                            h3.monthly-total
+                                                | Total: 
+                                                span $ #{anualDues.annualSummary}
+                            //- .per-year
+                            //-     h3.year 2024
+                            //-     .dues
+                            //-         .payment
+                            //-             h4.month
+                            //-                 span March
+                            //-                 span
+                            //-                     span $5
+                            //-                     span
+                            //-                         | Paid
+                            //-                         ion-icon(name='checkmark-circle')
+                            //-             h4.month
+                            //-                 span July
+                            //-                 span
+                            //-                     span Not paid
+                            //-                     span
+                            //-                         ion-icon(name='close-outline')
+                            //-         .total-container
+                            //-             h3.monthly-total
+                            //-                 | Total: 
+                            //-                 span $5
+                    -else
+                        h5(style="font-size:2.4rem;margin-bottom:1.2rem;padding:1rem;") No payment records yet
                     .make-payments
-                        form(action='')
+                        form(class="paymentForm" id="paymentForm")
                             input(type='number' name='year' id='' title='Enter year' placeholder='Enter year')
                             select#month(name='month')
                                 option(value='january') January

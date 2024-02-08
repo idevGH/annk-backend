@@ -17,6 +17,7 @@ const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 // Custom imports
 const memberModel = require("./../models/memberModel");
+const paymentModel = require("./../models/paymentReceipt");
 const AppError = require("../factoryFunc/errorController");
 
 /////////////////////////////////////////////
@@ -95,24 +96,16 @@ exports.imageManipulate = (req, res, next) => {
 exports.addMember = async function (req, res, next) {
   try {
     const { body } = req;
-    console.log(body);
+
     if (req.file !== undefined && req.file.filename)
       body.photo = `userPhotos/${req.file.filename}`;
+    else body.photo = undefined;
 
-    const newMember = await memberModel.create(body);
+    let newMember = await memberModel.create(body);
+    newMember.password = await newMember.encryptpassword(newMember.password);
+    newMember = await memberModel.findByIdAndUpdate(newMember._id, newMember);
 
-    //   2. Sending Code
-    // try {
-    //   const message = await promisify(client.messages.create)({
-    //     body: `Your verfication number is ${newMember.confirmNumberCode}`,
-    //     from: "+16592243778",
-    //     to: "+233554088124",
-    //   });
-    //   console.log(message.sid);
-    // } catch (err) {
-    //   console.log(err);
-    // }
-    // creating QRcode for the new member
+    // Creating QrCode file(png)
     try {
       qrcode.toFile(
         `./public/qrcodes/${newMember.slug}.png`,
@@ -157,6 +150,7 @@ exports.addMember = async function (req, res, next) {
     }
 
     generateToken(res, newMember);
+
     if (req.originalUrl.startsWith("/api/v1")) {
       res.status(201).json({
         status: "success",
@@ -179,6 +173,30 @@ exports.addMember = async function (req, res, next) {
 exports.viewProfile = async function (req, res, next) {
   try {
     const { user } = res.locals;
+    const transactions = await paymentModel.aggregate([
+      {
+        $match: {
+          annkId: user._id,
+        },
+      },
+      // {$match:{datePaid}}
+      {
+        $group: {
+          _id: { $year: "$datePaid" },
+          annualSummary: { $sum: "$amount" },
+          monthlyPayments: {
+            $push: {
+              name: "$name",
+              annkId: "$annkId",
+              amount: "$amount",
+              month: "$month",
+            },
+          },
+        },
+      },
+    ]);
+    if (transactions.length > 0) res.locals.user.dues = transactions;
+    // console.log(transactions);
     // const { annkId } = req.params;
 
     // let member = await memberModel.findById(annkId);
@@ -214,7 +232,7 @@ exports.viewProfile = async function (req, res, next) {
 
 exports.updateprofile = async (req, res, next) => {
   const { annkId } = req.params;
-  const { body } = req;
+  const { body, user } = req;
 
   const forbiddenFields = ["password", "passwordConfirm"];
   const bodyFields = Object.keys(body);
@@ -255,19 +273,28 @@ exports.updateprofile = async (req, res, next) => {
       filteredObj.slug = slug(body.name);
     }
 
+    Object.keys(filteredObj).forEach((propertyName) => {
+      user[`${propertyName}`] = filteredObj[`${propertyName}`];
+    });
+
+    user.passwordConfirm = user.password;
+
+    const updatedProfile = await user.save({ runValidators: true });
+
     // Saving updating member doc
-    const updatedProfile = await memberModel.findByIdAndUpdate(
-      annkId,
-      filteredObj,
-      {
-        new: true,
-        runValidators: false,
-      }
-    );
-    generateToken(res, updatedProfile);
+    // const updatedProfile = await memberModel.updateOne(
+    //   { _id: annkId },
+    //   filteredObj,
+    //   {
+    //     isNew: true,
+    //     runValidators: true,
+    //   }
+    // );
+    // console.log(updatedProfile);
+    if (updatedProfile !== undefined) generateToken(res, updatedProfile);
     // Sending response
     if (req.originalUrl.startsWith("/api"))
-      res.status(203).json({
+      return res.status(203).json({
         status: "success",
         message: "Profile updated successfully.",
         data: updatedProfile,
@@ -275,7 +302,7 @@ exports.updateprofile = async (req, res, next) => {
 
     if (req.originalUrl.startsWith("/member")) {
       // res.cookie("token",,{maxAge:"20m"});
-      res.render("profilePage", updatedProfile);
+      return res.render("profilePage", updatedProfile);
     }
 
     // console.log(updatedProfile);
@@ -286,10 +313,11 @@ exports.updateprofile = async (req, res, next) => {
 
 exports.updatePassword = async function (req, res, next) {
   try {
+    console.log(req.body);
     const { currentPassword, password, passwordConfirm } = req.body;
     const { annkId } = req.params;
     if (!password || !currentPassword || !passwordConfirm)
-      next(
+      return next(
         new AppError(
           "Please provide current password, New Password and password Confirm",
           400
@@ -297,11 +325,11 @@ exports.updatePassword = async function (req, res, next) {
       );
     // Getting the user
     const member = await memberModel.findById(annkId).select("+password");
-    if (!member) next(new AppError("ANNK member doesnt exist.", 400));
+    if (!member) return next(new AppError("ANNK member doesnt exist.", 400));
     if (
       (await member.comparePassword(currentPassword, member.password)) === false
     )
-      next(new AppError("Incorrect password", 400));
+      return next(new AppError("Current password not correct.", 400));
     else {
       // Setting the password and password property on the member Object
       member.password = password;
@@ -334,14 +362,27 @@ exports.protect = async function (req, res, next) {
 
       if (!cookie || !payload) throw new AppError("Please login again.", 400);
 
-      const member = await memberModel.findById(payload.id);
+      const member = await memberModel.findById(payload.id).select("+password");
 
       if (!member) throw new AppError("User doesnt exist anymore.", 400);
 
       if (new Date(member.passwordChangedAt) / 1000 > payload.iat)
         throw new AppError("Password was recently changed", 400);
 
-      res.locals.user = member;
+      if (member.numberVerified === false || member.verified === false)
+        throw new AppError("Please verify number to use this platform");
+
+      const memberDate = new Date(member.dob);
+      let day = `${memberDate.getDate()}`.padStart(2, "0");
+      let month = `${1 + memberDate.getMonth()}`.padStart(2, "0");
+      let year = memberDate.getFullYear();
+      const transformedDate = `${year} ${month} ${day}`;
+
+      member.dob2 = transformedDate;
+      // console.log(transformedDate);
+      req.user = member;
+      res.locals.user = { ...member._doc };
+      res.locals.user.dob2 = transformedDate;
 
       next();
     } else {
@@ -352,8 +393,10 @@ exports.protect = async function (req, res, next) {
         if (!cookie || !payload) res.status(400).render("login");
         else {
           const member = await memberModel.findById(payload.id);
-          if (!member) throw new AppError("User doesnt exist anymore.", 400);
+          if (!member)
+            throw new AppError("User doesnt exist anymore. Click Login", 400);
 
+          req.user = member;
           res.locals.user = member;
 
           if (new Date(member.passwordChangedAt) / 1000 > payload.iat)
@@ -364,6 +407,15 @@ exports.protect = async function (req, res, next) {
               .status(200)
               .render("verifyNumber", { userid: member._id });
 
+          const memberDate = new Date(member.dob);
+          let day = `${memberDate.getDate()}`.padStart(2, "0");
+          let month = `${1 + memberDate.getMonth()}`.padStart(2, "0");
+          let year = memberDate.getFullYear();
+          const transformedDate = `${year}-${month}-${day}`;
+          member.dob2 = transformedDate;
+          // console.log(transformedDate);
+          res.locals.user = { ...member._doc };
+          res.locals.user.dob2 = transformedDate;
           next();
         }
       }
@@ -422,7 +474,6 @@ exports.verifyNumber = async function (req, res, next) {
       else {
         if (body.verifyNumber * 1 === user.confirmNumberCode) {
           user = await memberModel.findByIdAndUpdate(user._id, {
-            verified: true,
             confirmNumberCode: "",
             numberVerified: true,
           });
@@ -488,6 +539,23 @@ exports.renderVerifyPage = function (req, res, next) {
 exports.payDues = async function (req, res, next) {
   console.log(req.body);
   res.json({ message: "Paid" });
+};
+
+exports.addPayment = async function (req, res, next) {
+  try {
+    const { body } = req;
+    const { user } = res.locals;
+    body.name = user.name;
+    body.annkId = req.params.annkId;
+    const receipt = await paymentModel.create(req.body);
+
+    res.status(200).json({
+      status: "success",
+      message: `${receipt.amount} has been paid.`,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 // toString("127.0.0.1:8090/member", { type: "svg" });
 // .console

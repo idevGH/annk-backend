@@ -11,11 +11,11 @@ const displayMessage = function (
   show = false,
   status = "failed"
 ) {
-  const color = status === "success" ? "green" : "red";
+  let color = status === "success" ? "green" : "red";
   messageEl.textContent = message;
   if (show === true) {
     messageContainer.classList.remove("hide");
-    messageContainer.style.backgroundColor = "color";
+    messageContainer.style.backgroundColor = color;
     messageBKG.classList.remove("hide");
   } else if (show === false) {
     messageContainer.classList.add("hide");
@@ -32,7 +32,7 @@ if (btnClose)
 loginForm.addEventListener("submit", async function (e) {
   e.preventDefault();
   const data = Object.fromEntries([...new FormData(loginForm)]);
-  console.log(JSON.stringify(data));
+
   const res = await fetch("/api/v1/member/login", {
     method: "post",
     headers: {
@@ -42,8 +42,11 @@ loginForm.addEventListener("submit", async function (e) {
   });
   const resData = await res.json();
 
-  console.log(resData);
-  if (resData.status === "success")
-    location.assign(`http://127.0.0.1:8090/member/${resData.id}`);
-  else displayMessage(resData.message, true, resData.status);
+  if (resData.status === "success") {
+    displayMessage(resData.message, true, resData.status);
+    setTimeout(() => {
+      location.assign(`/member/${resData.id}`);
+    }, 4000);
+  } else displayMessage(resData.message, true, resData.status);
 });
+

@@ -5,7 +5,7 @@ head
     title ANNK | 
         -if(user)
             | #{`${user.name.split(" ")[0]}'s profile`}
-    link(rel='shortcut icon' href='/src/AANk logo.jpg' type='image/x-icon')
+    link(rel='shortcut icon' href='/src/AANk logo.png' type='image/x-icon')
     // Icons CDN
     script(type='module' src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js')
     script(nomodule='' src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js')
@@ -23,19 +23,21 @@ head
         .main-header-logo-box
             -if(user)
                 a.homepage-link(href=`http://127.0.0.1:8090/member/${user._id}`)
-                    img(src='/src/images/annkLogo.jpeg' alt='ANNK Logo' srcset='')
-                    h3.annk-name ANNK
+                    img(src='/src/AANk logo.png' alt='ANNK Logo' srcset='')
+                    .text-container
+                        h3.annk-name ANNK
+                        h5 Y3 B3 SOM YIE
             -else
                 a.homepage-link(href=`#`)
-                    img(src='/src/images/annkLogo.jpeg' alt='ANNK Logo' srcset='')
+                    img(src='/src/AANk logo.png' alt='ANNK Logo' srcset='')
                     h3.annk-name ANNK
         .main-header-button-box
                 -if(user)
                     h4 Hello, #{user.name.split(" ")[0]}
                     a.btn.btn-logout(href='/member/logout') Logout
                 -else
-                    a.btn.btn-signup(href='http://127.0.0.1:8090/member') Signup
-                    a.btn.btn-login(href='http://127.0.0.1:8090/member/login') Login
+                    a.btn.btn-signup(href='/member') Signup
+                    a.btn.btn-login(href='/member/login') Login
     .message-container.hide
         .message-wrapper
              h2.message Hello there

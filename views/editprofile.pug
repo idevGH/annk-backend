@@ -1,44 +1,71 @@
 extends base
+block script
+    script(defer src="/src/js/editprofile.js")
 block content 
     .forms-container
         .peronal-details-container
-            form.personal-update-form
-            .personal-update-form-box
-                input(type='text' title='update name' name='name' value=`${user.name}`)
-            .personal-update-form-box
-                -const date = new Date(user.dob)
-                input(type='date' name='dob' id='' title='Update date of birth' value=``)
-            .personal-update-form-box
-                input(type='text' name='nationality' id='' title='Change nationality' value=`${user.nationality}`)
-            .personal-update-form-box
-                input(type='text' name='address' id='' title='Change Digital Address' value=`${user.digitalAddress}`)
-            .personal-update-form-box
-                select(name='region' id='')
-            .personal-update-form-box
-                input(type='text' name='phoneNumber' id='' title='Change Phone Number' value=`${user.phoneNumber}`)
-            .personal-update-form-box.photo-box
-                input#photo.photoEl(type='file' name='profilePhoto' accept='image/*' style='display: none')
-                img.new-image(src=`/${user.photo}` alt='')
-                label(for='photo')
-                    | Change photo 
-                    ion-icon(name='image-outline')
-            .personal-update-form-box.company-box
-                input(type='text' name='companyName' id='' title='Change Company Name' value=`${user.companyName}`)
-            .personal-update-form-box
-                input(type='text' name='companyLocation' id='' title='Change Company Location' value=`${user.companyLocation}`)
-            .personal-update-form-box
-                input(type='text' name='phoneNumber' id='' title='Change Phone Number' value=`${user.phoneNumber}`)
-            .update-button-box
-                button.btn.btn-update Update details
+            form.personal-update-form(data-annkId=`${user._id}`)
+                .personal-update
+                    .personal-update-form-box
+                        label(for='fullname') Name
+                        input#fullname(type='text' title='Change name' name='name' value=`${user.name}`)
+                    .personal-update-form-box
+                        label(for='dateOfBirth') Date of 
+                        input#dateOfBirth(type='date' name='dob' title='Update date of birth' value=`${user.dob2}`)
+                    .personal-update-form-box
+                        label(for='gender') Gender
+                        input#gender(type='text' name='gender' title='Update Gender' value=`${user.gender}`)
+                    .personal-update-form-box
+                        label(for='email') Email
+                        input#email(type='text' name='email' title='Update Email' value=`${user.email}`)
+                    .personal-update-form-box
+                        label(for='nationality') Nationality
+                        input#nationality(type='text' name='nationality' title='Change nationality' value=`${user.nationality}`)
+                    .personal-update-form-box
+                        label(for='digitalAddress') Digital Address / House Number
+                        input#digitalAddress(type='text' name='digitalAddress' title='Change Digital Address' value=`${user.digitalAddress}`)
+                    .personal-update-form-box
+                        label(for='region') Region
+                        input(type="text" value=`${user.region}` name="region")
+                    .personal-update-form-box
+                        label(for='phoneNumber') Phone number
+                        input#phoneNumber(type='text' name='phoneNumber' title='Change Phone Number' value=`${user.phoneNumber}`)
+                    .personal-update-form-box.photo-box
+                        input#photo.photoEl(type='file' name='photo' accept='image/*' style='display: none')
+                        img.new-image(src=`` alt=`${user.name.split(" ")[0]}'s photo`)
+                        label(for='photo')
+                            | Change photo 
+                            ion-icon(name='image-outline')
+                .company-details
+                    .personal-update-form-box.company-box
+                        label(for='companyName') Company name
+                        input#companyName(type='text' name='companyName' title='Change Company Name' value=`${user.companyName}`)
+                    .personal-update-form-box
+                        label(for='companyLocation') Location
+                        input#companyLocation(type='text' name='companyLocation' title='Change Company Location' value=`${user.companyLocation}`)
+                    -if(user.companyNumber)
+                        .personal-update-form-box
+                            label(for='companyNumber') Company Number
+                            input#companyNumber(type='text' name='companyNumber' title='Change Phone Number' value=`${user.companyNumber}`)
+                    -else
+                        .personal-update-form-box
+                            label(for='companyNumber') Company Number
+                            input#companyNumber(type='text' name='companyNumber' title='Change Phone Number' value=`${user.phoneNumber}`)
+                    .update-button-box
+                        button.btn.btn-update Update details
         .change-password-container
-            form.update-password-form(action='')
+            form.update-password-form(data-annkId=`${user._id}`)
                 .current-password-box.box
-                    input(type='text' name='currentPassword' id='' title='Enter Current Password' placeholder='Current Password')
+                    label(for='currentPassword') Current password
+                    input#currentPassword(type='text' name='currentPassword' title='Enter Current Password' minlength='6' placeholder='Current Password')
                 .new-password-box.box
-                    input(type='text' name='password' id='' title='Enter New Password' placeholder='New Password')
+                    label(for='password') New password
+                    input#password(type='text' name='password' title='Enter New Password' minlength='6' placeholder='New Password')
                 .new-password-box.box
-                    input(type='text' name='passwordConfirm' id='' title='Re-Enter Password' placeholder='Re-Enter Password')
+                    label(for='passwordConfirm') Re-type password
+                    input#passwordConfirm(type='text' name='passwordConfirm' title='Re-Enter Password' minlength='6' placeholder='Re-Enter Password')
                 .update-password-button-box
                     button.btn.btn-password-update Update password 
+
 
     
