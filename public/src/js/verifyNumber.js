@@ -43,12 +43,11 @@ if (verifyForm)
     };
 
     const res = await fetch(
-      `http://127.0.0.1:8090/api/v1/member/${userid}/verifyNumber`,
+      `/api/v1/member/${userid}/verifyNumber`,
       reqOptions
     );
     const resData = await res.json();
-    if (resData.status === "success")
-      location.assign(`http://127.0.0.1:8090/member/${userid}`);
+    if (resData.status === "success") location.assign(`/member/${userid}`);
     else {
       displayMessage(resData.message, true, resData.status);
     }
