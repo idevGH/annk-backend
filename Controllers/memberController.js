@@ -95,7 +95,7 @@ exports.addMember = async function (req, res, next) {
     try {
       qrcode.toFile(
         `./public/qrcodes/${newMember.slug}.png`,
-        `${req.protocol}//${req.hostname}/scan/${newMember._id}`,
+        `${req.protocol}//:${req.hostname}/scan/${newMember._id}`,
         { type: "" },
         (err) => {
           console.log(err);

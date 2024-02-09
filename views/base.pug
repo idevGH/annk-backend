@@ -1,51 +1,49 @@
-Doctype html
-html
-    head
-        meta(charset='UTF-8')
-        meta(name='viewport' content='width=device-width, initial-scale=1.0')
-        meta(http-equiv="script-src 'self' 'script-src-elem")
-        title ANNK | 
+head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    meta(http-equiv="script-src 'self' 'script-src-elem")
+    title ANNK | 
+        -if(user)
+            | #{`${user.name.split(" ")[0]}'s profile`}
+    link(rel='shortcut icon' href='/src/AANk logo.png' type='image/x-icon')
+    link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
+    // Icons CDN
+    script(type='module' defer src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js')
+    script(nomodule='' defer src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js')
+    // FONTS CDN
+    link(rel='preconnect' href='https://fonts.googleapis.com')
+    link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin='')
+    link(href='https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,200;6..12,400;6..12,500;6..12,600;6..12,700;6..12,800;6..12,900;6..12,1000&display=swap' rel='stylesheet')
+
+    // Custom CSS
+    link(rel='stylesheet' href='/src/css/style.css')
+    block script 
+
+.main-wrapper
+    // NavBar
+    header.main-header
+        .main-header-logo-box
             -if(user)
-                | #{`${user.name.split(" ")[0]}'s profile`}
-        link(rel='shortcut icon' href='/src/AANk logo.png' type='image/x-icon')
-        link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
-        // Icons CDN
-        script(type='module' defer src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js')
-        script(nomodule='' defer src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js')
-        // FONTS CDN
-        link(rel='preconnect' href='https://fonts.googleapis.com')
-        link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin='')
-        link(href='https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,200;6..12,400;6..12,500;6..12,600;6..12,700;6..12,800;6..12,900;6..12,1000&display=swap' rel='stylesheet')
-
-        // Custom CSS
-        link(rel='stylesheet' href='/src/css/style.css')
-        block script 
-
-    .main-wrapper
-        // NavBar
-        header.main-header
-            .main-header-logo-box
-                -if(user)
-                    a.homepage-link(href=`/member/${user._id}`)
-                        img(src='/src/AANk logo.png' alt='ANNK Logo' srcset='')
-                        .text-container
-                            h3.annk-name ANNK
-                            h5 Y3 B3 SOM YIE
-                -else
-                    a.homepage-link(href=`#`)
-                        img(src='/src/AANk logo.png' alt='ANNK Logo' srcset='')
+                a.homepage-link(href=`/member/${user._id}`)
+                    img(src='/src/AANk logo.png' alt='ANNK Logo' srcset='')
+                    .text-container
                         h3.annk-name ANNK
-            .main-header-button-box
-                    -if(user)
-                        h4 Hello, #{user.name.split(" ")[0]}
-                        a.btn.btn-logout(href='/member/logout') Logout
-                    -else
-                        a.btn.btn-signup(href='/member') Signup
-                        a.btn.btn-login(href='/member/login') Login
-        .message-container.hide
-            .message-wrapper
-                h2.message Hello there
-            button.close Close &times;
-        .message-bkg.hide
+                        h5 Y3 B3 SOM YIE
+            -else
+                a.homepage-link(href=`#`)
+                    img(src='/src/AANk logo.png' alt='ANNK Logo' srcset='')
+                    h3.annk-name ANNK
+        .main-header-button-box
+            -if(user)
+                h4 Hello, #{user.name.split(" ")[0]}
+                a.btn.btn-logout(href='/member/logout') Logout
+            -else
+                a.btn.btn-signup(href='/member') Signup
+                a.btn.btn-login(href='/member/login') Login
+    .message-container.hide
+        .message-wrapper
+            h2.message Hello there
+        button.close Close &times;
+    .message-bkg.hide
 
-        block content
+    block content
