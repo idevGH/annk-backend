@@ -18,12 +18,12 @@ if (process.env.NODE_ENV === "production")
   mongoUrl = mongoUrl
     .replace("<password>", process.env.DB_PASSWORD)
     .replace("<name>", process.env.DB_NAME);
-console.log(mongoUrl);
+
 mongoose.connect(mongoUrl);
 
 // starting server
 app.listen(process.env.PORT || 8090, "127.0.0.1", () => {
-  console.log("Listening on port 8090....");
+  console.log("Listening on port 8090....", process.env.PORT);
 });
 
 process.on("unhandledRejection", (err) => {

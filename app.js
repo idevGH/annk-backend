@@ -45,6 +45,9 @@ app.set("view engine", "pug");
 app.set("views", "./views");
 
 // Routes
+app.get("/", (req, res, next) => {
+  res.render("registerMember");
+});
 app.use("/api/v1/member", memberRouter);
 app.use("/member", memberRouter);
 app.use("/scan", scanMemberRouter);
