@@ -107,33 +107,33 @@ exports.addMember = async function (req, res, next) {
     }
 
     // Sending message to new Memebers
-    // try {
-    //   const fetchConfig = {
-    //     method: "post",
-    //     headers: {
-    //       Authorization: "Basic VEtBVWp0b0c6TWdTTEVuT1ByRw==",
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       from: "ANNK",
-    //       to: newMember.phoneNumber,
-    //       msg: `Hello ${
-    //         newMember.name.split(" ")[0]
-    //       }, Welcome to ANNK Enter the following code to confirm registration. code - ${
-    //         newMember.confirmNumberCode
-    //       }`,
-    //     }),
-    //   };
-    //   const res = await fetch(
-    //     `https://api.giantsms.com/api/v1/send`,
-    //     fetchConfig
-    //   );
+    try {
+      const fetchConfig = {
+        method: "post",
+        headers: {
+          Authorization: "Basic VEtBVWp0b0c6TWdTTEVuT1ByRw==",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "ANNK",
+          to: newMember.phoneNumber,
+          msg: `Hello ${
+            newMember.name.split(" ")[0]
+          }, Welcome to ANNK Enter the following code to confirm registration. code - ${
+            newMember.confirmNumberCode
+          }`,
+        }),
+      };
+      const res = await fetch(
+        `https://api.giantsms.com/api/v1/send`,
+        fetchConfig
+      );
 
-    //   const resData = await res.json();
-    //   // console.log(resData);
-    // } catch (err) {
-    //   console.log(err);
-    // }
+      const resData = await res.json();
+      // console.log(resData);
+    } catch (err) {
+      console.log(err);
+    }
 
     factoryFunc.generateToken(res, newMember);
 
