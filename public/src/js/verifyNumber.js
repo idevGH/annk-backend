@@ -35,7 +35,7 @@ if (verifyForm)
     const data = Object.fromEntries([...new FormData(this)]);
 
     const reqOptions = {
-      method: "post",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },

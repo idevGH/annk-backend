@@ -95,7 +95,7 @@ exports.addMember = async function (req, res, next) {
     try {
       qrcode.toFile(
         `./public/qrcodes/${newMember.slug}.png`,
-        `${req.protocol}//:${req.hostname}/scan/${newMember._id}`,
+        `${req.protocol}://${req.hostname}/scan/${newMember._id}`,
         { type: "" },
         (err) => {
           console.log(err);
@@ -107,33 +107,33 @@ exports.addMember = async function (req, res, next) {
     }
 
     // Sending message to new Memebers
-    try {
-      const fetchConfig = {
-        method: "post",
-        headers: {
-          Authorization: "Basic VEtBVWp0b0c6TWdTTEVuT1ByRw==",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "ANNK",
-          to: newMember.phoneNumber,
-          msg: `Hello ${
-            newMember.name.split(" ")[0]
-          }, Welcome to ANNK Enter the following code to confirm registration. code - ${
-            newMember.confirmNumberCode
-          }`,
-        }),
-      };
-      const res = await fetch(
-        `https://api.giantsms.com/api/v1/send`,
-        fetchConfig
-      );
+    // try {
+    //   const fetchConfig = {
+    //     method: "post",
+    //     headers: {
+    //       Authorization: "Basic VEtBVWp0b0c6TWdTTEVuT1ByRw==",
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       from: "ANNK",
+    //       to: newMember.phoneNumber,
+    //       msg: `Hello ${
+    //         newMember.name.split(" ")[0]
+    //       }, Welcome to ANNK Enter the following code to confirm registration. code - ${
+    //         newMember.confirmNumberCode
+    //       }`,
+    //     }),
+    //   };
+    //   const res = await fetch(
+    //     `https://api.giantsms.com/api/v1/send`,
+    //     fetchConfig
+    //   );
 
-      const resData = await res.json();
-      // console.log(resData);
-    } catch (err) {
-      console.log(err);
-    }
+    //   const resData = await res.json();
+    //   // console.log(resData);
+    // } catch (err) {
+    //   console.log(err);
+    // }
 
     factoryFunc.generateToken(res, newMember);
 
@@ -441,7 +441,6 @@ exports.verifyNumber = async function (req, res, next) {
       if (body.verifyNumber === undefined || body.verifyNumber.length < 1)
         throw new AppError("Please Enter Verification Code", 400);
       else {
-        console.log(body.verifyNumber, user);
         if (body.verifyNumber * 1 === user.confirmNumberCode) {
           user = await memberModel.findByIdAndUpdate(user._id, {
             numberVerified: true,
