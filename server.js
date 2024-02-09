@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === "development") mongoUrl = process.env.LOCALDB_URL;
 if (process.env.NODE_ENV === "production")
   mongoUrl = mongoUrl
     .replace("<password>", process.env.DB_PASSWORD)
-    .replace("name", process.env.DB_NAME);
+    .replace("<name>", process.env.DB_NAME);
 
 mongoose.connect(mongoUrl);
 
