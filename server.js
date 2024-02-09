@@ -12,13 +12,12 @@ const { promisify } = require("util");
 const mongoose = require("mongoose");
 
 // Connecting to Database
-let mongoUrl = "";
+let mongoUrl = `mongodb+srv://<name>:<password>@cluster0.brqvsbt.mongodb.net/?retryWrites=true`;
 if (process.env.NODE_ENV === "development") mongoUrl = process.env.LOCALDB_URL;
 if (process.env.NODE_ENV === "production")
-  mongoUrl = process.env.CLOUD_DATABASE_URL.replace(
-    "<password>",
-    process.env.DB_PASSWORD
-  );
+  mongoUrl = mongoUrl
+    .replace("<password>", process.env.DB_PASSWORD)
+    .replace("name", process.env.DB_NAME);
 
 mongoose.connect(mongoUrl);
 
