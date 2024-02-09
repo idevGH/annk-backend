@@ -396,7 +396,6 @@ exports.protect = async function (req, res, next) {
 };
 
 exports.login = async function (req, res, next) {
-  console.log(req.body);
   try {
     const { email, password } = req.body;
     if (!email || !password)
