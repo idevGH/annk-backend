@@ -5,6 +5,7 @@ const limiter = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
+const compression = require("compression");
 
 const memberRouter = require("./Routers/membersRoutes");
 const AppError = require("./factoryFunc/errorController");
@@ -20,6 +21,7 @@ app.use(
     message: "Too many request from this Ip address.",
   })
 );
+app.use(compression());
 // Setting some secured headers
 app.use(helmet());
 // Implementing Cross origin Resource sharing
@@ -53,12 +55,10 @@ app.all("*", (req, res, next) => {
   next(new AppError(`The resource you are looking for does not exist.`, 404));
 });
 
-console.log(process.env.NODE_ENV);
-
 // Handling Errors
 app.use((error, req, res, next) => {
-  console.log(error.name);
-  console.log(error.message);
+  // console.log(error.name);
+  // console.log(error.message);
   //Validation Error
   if (error.name === "ValidationError") {
     error = new AppError(`${Object.values(error[`errors`]).join(",")}.`, 404);

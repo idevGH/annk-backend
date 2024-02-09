@@ -52,5 +52,5 @@ if (verifyForm)
     else {
       displayMessage(resData.message, true, resData.status);
     }
-    console.log(resData);
+    // console.log(resData);
   });

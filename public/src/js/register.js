@@ -71,5 +71,5 @@ formEl.addEventListener("submit", async function (e) {
   else {
     displayMessage(resData.message, true, resData.status);
   }
-  console.log(resData);
+  // console.log(resData);
 });
