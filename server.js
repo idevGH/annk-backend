@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === "production")
 mongoose.connect(mongoUrl);
 
 // starting server
-app.listen(process.env.PORT || 8090, "127.0.0.1", () => {
+app.listen(process.env.PORT || 8090, () => {
   console.log("Listening on port 8090....", process.env.PORT);
 });
 
