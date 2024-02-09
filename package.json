@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "cross-env node_env='development' nodemon server.js",
-    "start": "cross-env node_env='production' node server.js"
+    "start:dev": "cross-env NODE_ENV='development' nodemon server.js",
+    "start": "cross-env NODE_ENV='production' node server.js"
   },
   "keywords": [],
   "author": "",
