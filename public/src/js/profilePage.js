@@ -100,7 +100,7 @@ function payWithPaystack(e) {
       true,
       "failed"
     );
-    console.log(err);
+    // console.log(err);
   }
 }
 

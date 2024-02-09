@@ -275,7 +275,7 @@ exports.updateprofile = async (req, res, next) => {
       return res.render("profilePage", updatedProfile);
     }
 
-    // console.log(updatedProfile);
+    // log(updatedProfile);
   } catch (err) {
     next(err);
   }
@@ -339,7 +339,7 @@ exports.protect = async function (req, res, next) {
       if (new Date(member.passwordChangedAt) / 1000 > payload.iat)
         throw new AppError("Password was recently changed", 400);
 
-      if (member.numberVerified === false || member.verified === false)
+      if (member.numberVerified === false)
         throw new AppError("Please verify number to use this platform");
 
       const memberDate = new Date(member.dob);
@@ -353,7 +353,6 @@ exports.protect = async function (req, res, next) {
       req.user = member;
       res.locals.user = { ...member._doc };
       res.locals.user.dob2 = transformedDate;
-
       next();
     } else {
       if (req.headers.cookie === undefined) res.status(400).render("login");
@@ -372,7 +371,7 @@ exports.protect = async function (req, res, next) {
           if (new Date(member.passwordChangedAt) / 1000 > payload.iat)
             throw new AppError("Password was recently changed", 400);
 
-          if (member.numberVerified === false || member.verified === false)
+          if (member.numberVerified === false)
             return res
               .status(200)
               .render("verifyNumber", { userid: member._id });
@@ -437,15 +436,16 @@ exports.login = async function (req, res, next) {
 exports.verifyNumber = async function (req, res, next) {
   try {
     const { body } = req;
-    let { user } = res.locals;
+    let user = await memberModel.findById(req.params.annkId);
     if (req.originalUrl.startsWith("/api")) {
       if (body.verifyNumber === undefined || body.verifyNumber.length < 1)
         throw new AppError("Please Enter Verification Code", 400);
       else {
+        console.log(body.verifyNumber, user);
         if (body.verifyNumber * 1 === user.confirmNumberCode) {
           user = await memberModel.findByIdAndUpdate(user._id, {
-            confirmNumberCode: "",
             numberVerified: true,
+            confirmNumberCode: " ",
           });
 
           res.locals.user = user;
@@ -527,6 +527,3 @@ exports.addPayment = async function (req, res, next) {
     next(err);
   }
 };
-// toString("127.0.0.1:8090/member", { type: "svg" });
-// .console
-//   .log(s);

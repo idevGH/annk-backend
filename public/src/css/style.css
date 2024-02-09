@@ -930,13 +930,20 @@
   justify-content: center;
   align-items: center;
   background-color: orangered;
+  width: 120rem;
   height: 40rem;
+  margin: 0 auto;
 }
 .error-container .message {
   padding: 1rem;
   padding-top: 2rem;
   display: block;
   color: aliceblue;
+}
+@media only screen and (max-width: 78em) {
+  .error-container {
+    width: 100%;
+  }
 }
 
 .verify-container {

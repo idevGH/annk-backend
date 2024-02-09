@@ -23,7 +23,11 @@ app.use(
 );
 app.use(compression());
 // Setting some secured headers
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 // Implementing Cross origin Resource sharing
 app.use(cors());
 // Handling muti-part form data
@@ -60,7 +64,7 @@ app.all("*", (req, res, next) => {
 
 // Handling Errors
 app.use((error, req, res, next) => {
-  // console.log(error.name);
+  // console.log(error);
   // console.log(error.message);
   //Validation Error
   if (error.name === "ValidationError") {

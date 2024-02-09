@@ -65,9 +65,7 @@ formEl.addEventListener("submit", async function (e) {
 
   const resData = await res.json();
   if (resData.status === "success")
-    location.assign(
-      `http://127.0.0.1:8090/member/${resData.data.newMember._id}`
-    );
+    location.assign(`/member/${resData.data.newMember._id}`);
   else {
     displayMessage(resData.message, true, resData.status);
   }
