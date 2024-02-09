@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "cross-env node_env='development' nodemon server.js",
-    "start:prod": "cross-env node_env='production' nodemon server.js"
+    "start": "cross-env node_env='production' nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,9 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.2",
     "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.1.0",
     "multer": "^1.4.5-lts.1",
@@ -29,7 +32,8 @@
     "sharp": "^0.33.2",
     "slug": "^8.2.3",
     "twilio": "^4.20.1",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "xss-clean": "^0.1.4"
   },
   "engines": {
     "node": ">=8.0.0"

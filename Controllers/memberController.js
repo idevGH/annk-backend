@@ -19,6 +19,7 @@ const { promisify } = require("util");
 const memberModel = require("./../models/memberModel");
 const paymentModel = require("./../models/paymentReceipt");
 const AppError = require("../factoryFunc/errorController");
+const factoryFunc = require("./../factoryFunc/factoryfuntions");
 
 /////////////////////////////////////////////
 // Module functions
@@ -46,22 +47,7 @@ const upload = multer({
   storage: multerStorage,
   fileFilter: imageFilter,
 });
-// Generate and send Token
-const generateToken = function (res, member) {
-  const token = jwt.sign(
-    { name: member.name, id: member._id },
-    process.env.SECRET_KEY,
-    {
-      expiresIn: 1000 * 60 * 20,
-    }
-  );
 
-  res.cookie("loginToken", token, {
-    maxAge: 20 * 60 * 1000,
-    httpOnly: true,
-    // secure:true,
-  });
-};
 ////////////////////////////////////////
 // Image file middleware handler
 exports.uploadSingleImage = upload.single("photo");
@@ -109,7 +95,7 @@ exports.addMember = async function (req, res, next) {
     try {
       qrcode.toFile(
         `./public/qrcodes/${newMember.slug}.png`,
-        `https://annk.netlify.app/${newMember.slug}.html`,
+        `${req.protocol}//${req.hostname}/scan/${newMember._id}`,
         { type: "" },
         (err) => {
           console.log(err);
@@ -121,35 +107,35 @@ exports.addMember = async function (req, res, next) {
     }
 
     // Sending message to new Memebers
-    try {
-      const fetchConfig = {
-        method: "post",
-        headers: {
-          Authorization: "Basic VEtBVWp0b0c6TWdTTEVuT1ByRw==",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "ANNK",
-          to: newMember.phoneNumber,
-          msg: `Hello ${
-            newMember.name.split(" ")[0]
-          }, Welcome to ANNK Enter the following code to confirm registration. code - ${
-            newMember.confirmNumberCode
-          }`,
-        }),
-      };
-      const res = await fetch(
-        `https://api.giantsms.com/api/v1/send`,
-        fetchConfig
-      );
+    // try {
+    //   const fetchConfig = {
+    //     method: "post",
+    //     headers: {
+    //       Authorization: "Basic VEtBVWp0b0c6TWdTTEVuT1ByRw==",
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       from: "ANNK",
+    //       to: newMember.phoneNumber,
+    //       msg: `Hello ${
+    //         newMember.name.split(" ")[0]
+    //       }, Welcome to ANNK Enter the following code to confirm registration. code - ${
+    //         newMember.confirmNumberCode
+    //       }`,
+    //     }),
+    //   };
+    //   const res = await fetch(
+    //     `https://api.giantsms.com/api/v1/send`,
+    //     fetchConfig
+    //   );
 
-      const resData = await res.json();
-      // console.log(resData);
-    } catch (err) {
-      console.log(err);
-    }
+    //   const resData = await res.json();
+    //   // console.log(resData);
+    // } catch (err) {
+    //   console.log(err);
+    // }
 
-    generateToken(res, newMember);
+    factoryFunc.generateToken(res, newMember);
 
     if (req.originalUrl.startsWith("/api/v1")) {
       res.status(201).json({
@@ -214,14 +200,6 @@ exports.viewProfile = async function (req, res, next) {
       });
     }
     if (req.originalUrl.startsWith("/member") && user) {
-      // member = { ...member._doc };
-
-      // const memberDate = new Date(member.dob);
-
-      // member.dob = Intl.DateTimeFormat("en-US", {
-      //   dateStyle: "medium",
-      // }).format(memberDate);
-
       res.render("profilePage");
     }
   } catch (err) {
@@ -281,17 +259,9 @@ exports.updateprofile = async (req, res, next) => {
 
     const updatedProfile = await user.save({ runValidators: true });
 
-    // Saving updating member doc
-    // const updatedProfile = await memberModel.updateOne(
-    //   { _id: annkId },
-    //   filteredObj,
-    //   {
-    //     isNew: true,
-    //     runValidators: true,
-    //   }
-    // );
     // console.log(updatedProfile);
-    if (updatedProfile !== undefined) generateToken(res, updatedProfile);
+    if (updatedProfile !== undefined)
+      factoryFunc.generateToken(res, updatedProfile);
     // Sending response
     if (req.originalUrl.startsWith("/api"))
       return res.status(203).json({
@@ -426,6 +396,7 @@ exports.protect = async function (req, res, next) {
 };
 
 exports.login = async function (req, res, next) {
+  console.log(req.body);
   try {
     const { email, password } = req.body;
     if (!email || !password)
@@ -441,7 +412,7 @@ exports.login = async function (req, res, next) {
     else {
       member.password = undefined;
 
-      generateToken(res, member);
+      factoryFunc.generateToken(res, member);
 
       if (req.originalUrl.startsWith("/api"))
         res.status(200).json({

@@ -39,7 +39,8 @@ memberRouter.use(memberController.protect);
 memberRouter.get("/print", async (req, res, next) => {
   const user = res.locals.user;
 
-  const html = pug.renderFile(`./views/profilepage.pug`, { user });
+  // const html = pug.renderFile(`./views/printMemberFormTemplate.pug`, { user });
+  const html = ``;
   let pdfPath = path.join("pdf", `${user.slug}.pdf`);
 
   let options = {
@@ -57,25 +58,9 @@ memberRouter.get("/print", async (req, res, next) => {
     path: "./public/output.pdf",
   };
 
-  pdf
-    .create(document, options)
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
+  const filepath = await pdf.create(document, options);
 
-  // const browser = await puppeteer.launch({
-  //   args: ["--no-sandbox"],
-  //   headless: true,
-  // });
-
-  // let page = await browser.newPage();
-
-  // await page.goto(`data:text/html;charset=UTF-8,${html}`, {
-  //   waitUntil: "networkidle0",
-  // });
-
-  // await page.pdf(options);
-  // await browser.close();
-  res.end("hi");
+  res.sendFile(filepath.filename);
 });
 //////
 

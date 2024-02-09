@@ -1,11 +1,28 @@
 const express = require("express");
 const cors = require("cors");
+// Security packages
+const limiter = require("express-rate-limit");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
 
 const memberRouter = require("./Routers/membersRoutes");
 const AppError = require("./factoryFunc/errorController");
 const scanMemberRouter = require("./Routers/scanMemberRoutes");
 
 const app = express();
+// Limiting request
+app.use(
+  "/member",
+  limiter({
+    max: 800,
+    windowMs: 1000 * 10,
+    message: "Too many request from this Ip address.",
+  })
+);
+// Setting some secured headers
+app.use(helmet());
+// Implementing Cross origin Resource sharing
 app.use(cors());
 // Handling muti-part form data
 app.use(
@@ -15,6 +32,10 @@ app.use(
 );
 // parsing body from the request
 app.use(express.json());
+// Removing any query from forms(Used after passing the body from the request)
+app.use(mongoSanitize());
+//Preventing cross site scripting
+app.use(xss());
 // serving static files
 app.use(express.static("./public"));
 // Setting views Engine

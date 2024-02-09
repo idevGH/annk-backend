@@ -2,9 +2,10 @@ extends base
 block script 
     script(defer src="https://js.paystack.co/v1/inline.js")
     script(defer src="/src/js/profilePage.js") 
-    link(rel="stylesheet", href="./public/src/style.css")
+    link(rel="stylesheet", href="./style.css")
+    
 block content
-    .member-container(style="background-color:red;")
+    .member-container
         .menu-side-bar
             .profile-box
                 .profile-box-pic

@@ -12,15 +12,23 @@ const { promisify } = require("util");
 const mongoose = require("mongoose");
 
 // Connecting to Database
-mongoose.connect("mongodb://127.0.0.1:27017/Annk");
+let mongoUrl = "";
+if (process.env.NODE_ENV === "development") mongoUrl = process.env.LOCALDB_URL;
+if (process.env.NODE_ENV === "production")
+  mongoUrl = process.env.CLOUD_DATABASE_URL.replace(
+    "<password>",
+    process.env.DB_PASSWORD
+  );
+
+mongoose.connect(mongoUrl);
 
 // starting server
-app.listen(8090, "127.0.0.1", () => {
+app.listen(process.env.PORT || 8090, "127.0.0.1", () => {
   console.log("Listening on port 8090....");
 });
 
 process.on("unhandledRejection", (err) => {
   if (err.name === "MongooseServerSelectionError")
     err.message = `Error connecting to database.`;
-  console.log(err.name, err.message, "********");
+  console.log(err.name, err.message, "From unhandledRejection");
 });
