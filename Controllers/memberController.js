@@ -84,7 +84,7 @@ exports.addMember = async function (req, res, next) {
     const { body } = req;
 
     if (req.file !== undefined && req.file.filename)
-      body.photo = `userPhotos/${req.file.filename}`;
+      body.photo = `userphotos/${req.file.filename}`;
     else body.photo = undefined;
 
     let newMember = await memberModel.create(body);
