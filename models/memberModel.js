@@ -165,7 +165,7 @@ memberSchema.methods.createQRCode = async function (slug, req) {
       console.log(err);
     }
   );
-  return `qrcodes/${slug}.png`;
+  return `qrCodes/${slug}.png`;
 };
 // Compare password
 memberSchema.methods.comparePassword = async function (

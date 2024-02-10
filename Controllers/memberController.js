@@ -222,7 +222,7 @@ exports.updateprofile = async (req, res, next) => {
   )
     next(new AppError("Can't update password Fields with this route.", 401));
 
-  if (req.file !== undefined) body.photo = `userPhotos/${req.file.filename}`;
+  if (req.file !== undefined) body.photo = `userphotos/${req.file.filename}`;
   let member = await memberModel.findById(annkId);
   const allowedFields = [
     "name",
