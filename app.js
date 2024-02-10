@@ -64,7 +64,7 @@ app.all("*", (req, res, next) => {
 
 // Handling Errors
 app.use((error, req, res, next) => {
-  console.log(error);
+  // console.log(error);
   // console.log(error.message);
   //Validation Error
   if (error.name === "ValidationError") {

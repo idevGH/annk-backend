@@ -247,7 +247,7 @@ exports.updateprofile = async (req, res, next) => {
     });
     // creating QRcode path
     if (body.name) {
-      filteredObj.qrCode = await member.createQRCode(slug(body.name));
+      filteredObj.qrCode = await member.createQRCode(slug(body.name), req);
       filteredObj.slug = slug(body.name);
     }
 

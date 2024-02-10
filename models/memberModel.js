@@ -154,7 +154,7 @@ memberSchema.pre("save", async function (next) {
 });
 
 // methods for docs
-memberSchema.methods.createQRCode = async function (slug) {
+memberSchema.methods.createQRCode = async function (slug, req) {
   // creating QRcode for the new member
 
   qrcode.toFile(
