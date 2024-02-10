@@ -55,7 +55,7 @@ const memberSchema = mongoose.Schema(
     },
     companyLocation: {
       type: String,
-      required: [true, "Specify Comapny location"],
+      required: [true, "Specify Comapany location"],
     },
     gender: {
       type: String,
