@@ -68,7 +68,11 @@ app.use((error, req, res, next) => {
   // console.log(error.message);
   //Validation Error
   if (error.name === "ValidationError") {
-    error = new AppError(`${Object.values(error[`errors`]).join(",")}.`, 404);
+    error = new AppError(
+      `${Object.values(error[`errors`]).join(`
+      `)}.`,
+      404
+    );
   }
   if (error.code === 11000) {
     // error.statusCode = 400;
