@@ -95,7 +95,7 @@ exports.addMember = async function (req, res, next) {
     try {
       qrcode.toFile(
         `./public/qrcodes/${newMember.slug}.png`,
-        `${req.protocol}://${req.hostname}/scan/${newMember._id}`,
+        `${req.protocol}://${req.host}/scan/${newMember._id}`,
         { type: "" },
         (err) => {
           console.log(err);
@@ -390,6 +390,7 @@ exports.protect = async function (req, res, next) {
       }
     }
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };
@@ -429,6 +430,7 @@ exports.login = async function (req, res, next) {
       }
     }
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };

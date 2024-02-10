@@ -159,7 +159,7 @@ memberSchema.methods.createQRCode = async function (slug) {
 
   qrcode.toFile(
     `./public/qrcodes/${slug}.png`,
-    `https://annk.netlify.app/${slug}.html`,
+    `${req.protocol}://${req.host}/scan/${slug}`,
     { type: "png" },
     (err) => {
       console.log(err);
