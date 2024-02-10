@@ -200,7 +200,7 @@ exports.viewProfile = async function (req, res, next) {
       });
     }
     if (req.originalUrl.startsWith("/member") && user) {
-      res.render("profilePage");
+      res.render("profilepage");
     }
   } catch (err) {
     console.log(err);
