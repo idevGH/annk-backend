@@ -158,7 +158,7 @@ memberSchema.methods.createQRCode = async function (slug) {
   // creating QRcode for the new member
 
   qrcode.toFile(
-    `./public/qrcodes/${slug}.png`,
+    `${__dirname}/public/qrcodes/${slug}.png`,
     `${req.protocol}://${req.host}/scan/${slug}`,
     { type: "png" },
     (err) => {

@@ -69,9 +69,12 @@ exports.imageManipulate = (req, res, next) => {
           quality: 50,
         })
         .toFormat("jpeg")
-        .toFile(`./public/userphotos/${req.file.filename}`, (err) => {
-          throw err;
-        });
+        .toFile(
+          `${__dirname}/public/userphotos/${req.file.filename}`,
+          (err) => {
+            throw err;
+          }
+        );
       next();
     } else next();
   } catch (err) {
