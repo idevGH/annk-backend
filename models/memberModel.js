@@ -147,19 +147,19 @@ memberSchema.pre("save", async function (next) {
   //3: Making slug out the name
   this.slug = slug(this.name);
   // 4. Creating qrCodes
-  this.qrCode = `qrcodes/${this.slug}.png`;
+  this.qrCode = `qrCodes/${this.slug}.png`;
   // 5: passwordChangedAt
   this.PasswordChangedAt = new Date(Date.now());
   next();
 });
 
 // methods for docs
-memberSchema.methods.createQRCode = async function (slug, req) {
+memberSchema.methods.createQRCode = async function (slug, id, req) {
   // creating QRcode for the new member
 
   qrcode.toFile(
     `public/qrCodes/${slug}.png`,
-    `${req.protocol}://${req.host}/scan/${slug}`,
+    `${req.protocol}://${req.host}/scan/${id}`,
     { type: "png" },
     (err) => {
       console.log(err);
