@@ -12,9 +12,11 @@ exports.getScannedMember = async (req, res, next) => {
     if (!member) throw new AppError("User doesn't exist", 400);
     const filteredObj = {
       name: member.name,
-      gender: member.gender,
-      position: "Member",
+      position: member.position,
       photo: member.photo,
+      idExpiry: Intl.DateTimeFormat("en-GH", { dateStyle: "short" }).format(
+        member.idExpiry
+      ),
     };
     // 4:Sending response
     res.status(200).render("scannedMember", filteredObj);

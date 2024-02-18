@@ -1,7 +1,6 @@
 head
     meta(charset='UTF-8')
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
-    meta(http-equiv="script-src 'self' 'script-src-elem")
     title ANNK | 
         -if(user)
             | #{`${user.name.split(" ")[0]}'s profile`}
@@ -25,20 +24,20 @@ head
         .main-header-logo-box
             -if(user)
                 a.homepage-link(href=`/member/${user._id}`)
-                    img(src='/src/AANk logo.png' alt='ANNK Logo' srcset='')
+                    img(src='/src/images/AANk logo.png' alt='ANNK Logo' srcset='')
                     .text-container
                         h3.annk-name ANNK
                         h5 Y3 B3 SOM YIE
             -else
                 a.homepage-link(href=`#`)
-                    img(src='/src/AANk logo.png' alt='ANNK Logo' srcset='')
+                    img(src='/src/images/AANk logo.png' alt='ANNK Logo' srcset='')
                     h3.annk-name ANNK
         .main-header-button-box
             -if(user)
                 h4 Hello, #{user.name.split(" ")[0]}
                 a.btn.btn-logout(href='/member/logout') Logout
             -else
-                a.btn.btn-signup(href='/member') Signup
+                a.btn.btn-signup(href='/member/register') Signup
                 a.btn.btn-login(href='/member/login') Login
     .message-container.hide
         .message-wrapper

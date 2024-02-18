@@ -97,9 +97,9 @@ block content
                                         //- -console.log(anualDues)
                                         .payment
                                             each dues in anualDues.monthlyPayments
-                                                -if(dues.month)
+                                                -if(dues.datePaid)
                                                     h4.month
-                                                        span #{dues.month}
+                                                        span #{Intl.DateTimeFormat("en-GH",{month:"long"}).format(dues.datePaid)}
                                                         span
                                                             span $#{dues.amount}
                                                             span

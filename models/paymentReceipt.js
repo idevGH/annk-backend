@@ -4,24 +4,35 @@ const paymentSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "Please enter name of Member."],
     },
     amount: {
       type: Number,
       required: [true, "No Amount was specified for the current transaction."],
     },
-    month: {
-      type: String,
-      required: [true, "No Month was specified for the current transaction."],
+    originalpaymentDate: {
+      type: Date,
+      default: new Date(Date.now()),
     },
     datePaid: {
       type: Date,
       default: new Date(Date.now()),
     },
+
+    paymentType: {
+      type: String,
+      default: "dues",
+    },
     annkId: {
       type: mongoose.Schema.ObjectId,
       ref: "Members",
-      required: true,
+      required: [true, "Include member ID."],
+    },
+    month: {
+      type: String,
+    },
+    year: {
+      type: String,
     },
   },
   {
@@ -29,6 +40,13 @@ const paymentSchema = mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+paymentSchema.pre("save", function (next) {
+  this.month = Intl.DateTimeFormat("en-GH", { month: "short" }).format(
+    this.datePaid
+  );
+  this.year = new Date(this.datePaid).getFullYear();
+  next();
+});
 
 paymentSchema.virtual("payments", {
   ref: "Members",
@@ -36,7 +54,7 @@ paymentSchema.virtual("payments", {
   foreignField: "_id",
 });
 
-paymentSchema.index({ name: 1, amount: 1, month: 1 }, { unique: true });
+paymentSchema.index({ name: 1, month: 1, year: 1 }, { unique: true });
 
 const paymentModel = mongoose.model("payment", paymentSchema);
 paymentModel.syncIndexes();

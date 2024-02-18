@@ -13,12 +13,13 @@ memberRouter
   .get(memberController.renderLoginPage)
   .post(memberController.login);
 
-memberRouter.route("/").get((req, res, next) => {
-  res.status(200).render("registerMember");
-});
+memberRouter.route("/").get(memberController.getAllMembers);
 
 memberRouter
   .route("/register")
+  .get((req, res, next) => {
+    res.status(200).render("registerMember");
+  })
   .post(
     memberController.uploadSingleImage,
     memberController.imageManipulate,

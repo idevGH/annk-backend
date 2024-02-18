@@ -8,8 +8,10 @@ const xss = require("xss-clean");
 const compression = require("compression");
 
 const memberRouter = require("./Routers/membersRoutes");
+const adminRouter = require("./Routers/adminRoutes");
 const AppError = require("./factoryFunc/errorController");
 const scanMemberRouter = require("./Routers/scanMemberRoutes");
+const paymentRouter = require("./Routers/paymentRoutes");
 
 const app = express();
 // Limiting request
@@ -54,7 +56,11 @@ app.get("/", (req, res, next) => {
 });
 app.use("/api/v1/member", memberRouter);
 app.use("/member", memberRouter);
+app.use("/api/v1/admin", adminRouter);
+app.use("/admin", adminRouter);
 app.use("/scan", scanMemberRouter);
+app.use("/pay", paymentRouter);
+app.use("/api/v1/pay", paymentRouter);
 
 // Handling unimplemented routes
 app.all("*", (req, res, next) => {

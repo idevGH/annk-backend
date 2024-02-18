@@ -121,6 +121,18 @@ const memberSchema = mongoose.Schema(
       type: Date,
       default: new Date(Date.now()),
     },
+    idExpiry: {
+      type: Date,
+      default: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+    },
+    position: {
+      type: String,
+      default: "Member",
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     toJSON: {

@@ -32,8 +32,17 @@ if (btnClose)
 loginForm.addEventListener("submit", async function (e) {
   e.preventDefault();
   const data = Object.fromEntries([...new FormData(loginForm)]);
+  if (window.location.pathname.startsWith("/admin"))
+    data.phoneNumber = data.email;
+  const url = window.location.pathname.startsWith("/admin")
+    ? "/api/v1/admin/login"
+    : "/api/v1/member/login";
 
-  const res = await fetch("/api/v1/member/login", {
+  const routTo = window.location.pathname.startsWith("/admin")
+    ? "/admin/"
+    : "/member/";
+
+  const res = await fetch(url, {
     method: "post",
     headers: {
       "Content-Type": "application/json",
@@ -45,8 +54,7 @@ loginForm.addEventListener("submit", async function (e) {
   if (resData.status === "success") {
     displayMessage(resData.message, true, resData.status);
     setTimeout(() => {
-      location.assign(`/member/${resData.id}`);
+      location.assign(`${routTo}${resData.id}`);
     }, 4000);
   } else displayMessage(resData.message, true, resData.status);
 });
-

@@ -165,7 +165,6 @@ exports.viewProfile = async function (req, res, next) {
           annkId: user._id,
         },
       },
-      // {$match:{datePaid}}
       {
         $group: {
           _id: { $year: "$datePaid" },
@@ -175,13 +174,17 @@ exports.viewProfile = async function (req, res, next) {
               name: "$name",
               annkId: "$annkId",
               amount: "$amount",
-              month: "$month",
+              datePaid: "$datePaid",
             },
           },
         },
       },
     ]);
-    if (transactions.length > 0) res.locals.user.dues = transactions;
+
+    if (transactions.length > 0)
+      res.locals.user.dues = transactions.sort(
+        (annua, next) => next._id - annua._id
+      );
     // console.log(transactions);
     // const { annkId } = req.params;
 
@@ -205,6 +208,44 @@ exports.viewProfile = async function (req, res, next) {
   } catch (err) {
     console.log(err);
     next(err);
+  }
+};
+
+exports.getAllMembers = async function (req, res, next) {
+  try {
+    const { query } = req;
+
+    const selectFields = {
+      name: 1,
+      photo: 1,
+      verified: 1,
+      idExpiry: 1,
+    };
+    let caption = undefined;
+    if (query.region && query.region !== "All")
+      caption = `${query.region.toLocaleUpperCase()} PROFILES `;
+    if (query.region && query.region === "All") caption = `NAIONAL PROFILES `;
+
+    if (query.phoneNumber && query.phoneNumber === "on")
+      selectFields.phoneNumber = 1;
+    if (query.position && query.position === "on") selectFields.position = 1;
+    if (query.companyName && query.companyName === "on")
+      selectFields.companyName = 1;
+
+    const findQuery = memberModel.find({});
+    if (query.name) findQuery.find({ name: { $regex: query.name } });
+    if (query.region && query.region !== "All")
+      findQuery.find({ region: { $regex: query.region } });
+
+    const members = await findQuery.select(selectFields);
+    res.status(200).json({
+      caption,
+      size: members.length,
+      message: "successful",
+      data: members,
+    });
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -357,6 +398,7 @@ exports.protect = async function (req, res, next) {
       req.user = member;
       res.locals.user = { ...member._doc };
       res.locals.user.dob2 = transformedDate;
+
       next();
     } else {
       if (req.headers.cookie === undefined) res.status(400).render("login");

@@ -1,0 +1,172 @@
+extends base 
+block script 
+    script(defer src="/src/js/admin.js") 
+block content 
+    .admin-page
+        .bkg.hide
+            .holder-container
+        .menu-container.hide
+            button.btn-close close &times;
+            ul.menu-items-container
+                li.menu-item
+                    a(href='#') Admin profile
+                li.menu-item
+                    a(href='#') Members
+                li.menu-item
+                    a(href='#') Accounts
+                li.menu-item
+                    a(href='#') Prints
+            // <li class="menu-item"><a href="#"></a></li>
+            .profile
+                .image
+                    img(src='./src/images/male avatar.jpg' alt='Ernest Image')
+                    h3.name Ernest Fosu
+                .edit-profile
+                    a(href='#') edit profile
+        // Profile page
+        .admin-view-page.hide
+            header.activity-header
+                .menu-box Menu
+            header.view-header
+                h3.profile Ernest Profile
+            .main-view
+                span.loader.hide
+                form.form.admin-profile-form
+                    .input-box.box
+                        label(for='name') Name
+                        input#name(type='text' name='fullname' value=`${user.name}`)
+                    .input-box.box
+                        label(for='nationality') Date of birth
+                        input#dob(type='date' name='dob' value=`${user.dob2}`)
+                    .input-box.box
+                        label(for='nationality') Nationality
+                        input#nationality(type='text' name='nationality' value=`${user.nationality}`)
+                    .input-box.box
+                        label(for='placeofbirth') Place of Birth
+                        input#placeofbirth(type='text' name='placeofbirth' value=`${user.placeOfBirth}`)
+                    //- .input-box.box
+                    //-     label(for='role') Role
+                    //-     input#role(type='text' name='role' value='admin')
+                    .input-box.box
+                        label(for='number') Number
+                        input#number(type='text' name='number' value=`${user.phoneNumber}`)
+                    .submit-box
+                        button Update profile
+                form.form.password-form
+                    .input-box.box
+                        label(for='currenPassword') Current password
+                        input#currentPassword(type='password' name='currentPassword')
+                    .input-box.box
+                        label(for='password') New password
+                        input#password(type='password' name='password')
+                    .input-box.box
+                        label(for='passwordConfirm') New password
+                        input#passwordConfirm(type='password' name='passwordConfirm')
+                    .submit-box
+                        button Update password
+        .admin-view-page
+            span.loader.hide
+            header.activity-header
+                .menu-box Menu 
+                |  &ampequals;
+                input#search(type='search' name='search' incremental='' placeholder='search member')
+            header.view-header
+                h3.profile members
+            .main-view.members-view
+                .member-profile
+                    .member(data-id='45663')
+                        .details-container
+                            img.member-picture(src='./src/images/female avatar.png' alt='')
+                            h2.name T/Dr. Kwame Appiah
+                            .buttons-container
+                                button.btn.btn-verify-number Verify member
+                                button.btn.btn-add-payment Add Payment
+                                button.btn.btn-renew-id Renew Id
+                                button.btn.btn-delete-user Delete user 
+        .admin-view-page
+            span.loader.hide
+            header.activity-header
+                .menu-box Menu 
+                |  &ampequals;
+            header.view-header
+                h3.profile Accounts 
+            .main-view
+                h3 Accounts
+        .admin-view-page
+            span.loader.hide
+            header.activity-header
+                .menu-box Menu 
+                |  &ampequals;
+            header.view-header
+                h3.profile members
+            header.filter
+                .functionalities
+                    form.form-filter
+                        select#regions(name='region')
+                            option(value='All') All
+                            option(value='Ahafo Region') Ahafo Region
+                            option(value='Ashanti Region') Ashanti Region
+                            option(value='Bono Region') Bono Region
+                            option(value='Bono East Region') Bono East Region
+                            option(value='Central Region') Central Region
+                            option(value='Eastern Region') Eastern
+                            option(value='Greater Accra Region') Greater Accra Region
+                            option(value='Northern Region') Northern Region
+                            option(value='North East Region') North East Region
+                            option(value='Oti Region') Oti Region
+                            option(value='Savannah Region') Savannah Region
+                            option(value='Upper East Region') Upper East Region
+                            option(value='Upper West Region') Upper West Region
+                            option(value='Volta Region') Volta Region
+                            option(value='Western Region') Western Region
+                            option(value='Western North Region') Western North Region
+                        .fields
+                            .input-box.box
+                                label(for='fullname') Name
+                                input#fullname(type='checkbox' name='fullname')
+                            .input-box.box
+                                label(for='phoneNumber') Phone Number
+                                input#phoneNumber(type='checkbox' name='phoneNumber')
+                            .input-box.box
+                                label(for='companyName') company name
+                                input#companyName(type='checkbox' name='companyName')
+                            .input-box.box
+                                label(for='position') Position
+                                input#position(type='checkbox' name='position')
+                            .input-box.box
+                                label(for='idExpiry') ID Expiry
+                                input#idExpiry(type='checkbox' name='idExpiry')
+                        .btn-filter-box
+                            button.btn-filter Generate PDF 
+            .main-view.members-profile-view
+                span.loader.hide
+                .prints-view
+                    .member-profile-print
+                        #profile-print-area.profiles-header
+                            header.profile-header
+                                img(src='./src/AANk logo.png' alt='')
+                                img(src='./src/AANk logo.png' alt='')
+                                h2.company-name AHABA NDURO NKABOM KUO
+                                h3.company-acronym (ANNK)
+                                h3.company-location BONO EAST - GHANA
+                                h3.company-national NATIONAL PROFILE
+                            .members-container
+                                .member-box
+                                    h3
+                                        span Name: 
+                                        span  Kwaku Fosu
+                                    h3
+                                        span Position: 
+                                        span  Member
+                                    h3
+                                        span Phone Number: 
+                                        span  0554088124
+                                    h3
+                                        span Company name: 
+                                        span  Dua ma aduro
+                                    h3
+                                        span ID Expiry: 
+                                        span  12th July, 2025
+                                    img(src='src/images/male avatar.jpg' alt='')
+                    .print
+                        button print profiles

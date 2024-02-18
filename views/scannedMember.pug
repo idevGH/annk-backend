@@ -2,8 +2,11 @@ extends base
 block content 
     .scan-page-container
         header.details-header
+            img(src="/src/images/AANk logo.png" alt="annk-logo")
+            img(src="/src/images/AANk logo.png" alt="annk-logo")
             h3.full-name AHABA NDURO NKABOM KUO
             h4.acronym (ANNK)
+            h4 BONO EAST - GHANA
         .profile-pic
             img(src=`/${photo}` alt=`${name.split(" ")[0]}'s photo`)
         .details-box
@@ -11,8 +14,8 @@ block content
                 span Name :
                 span T/Dr. #{name}
             h4.name
-                span Gender :
-                span #{gender}
-            h4.name
                 span Position :
                 span #{position}
+            h4.name
+                span Renewal Date:
+                span #{idExpiry}

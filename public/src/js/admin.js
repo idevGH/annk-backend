@@ -1,0 +1,318 @@
+const menuEl = document.querySelectorAll(".menu-box");
+const menuItems = document.querySelectorAll(".menu-item");
+const menuContainer = document.querySelector(".menu-container");
+const btnClose = document.querySelector(".btn-close");
+const views = document.querySelectorAll(".admin-view-page");
+const loader = document.querySelectorAll(".loader");
+let membersContainer = document.querySelector(".member-profile");
+let membersViewEl = document.querySelector(".members-view");
+const searchButton = document.querySelector('input[type="search"]');
+let paymentButtons = document.getElementsByClassName("btn-add-payment");
+const formFilter = document.querySelector(".form-filter");
+const btnGenerateprofile = document.querySelector(".btn-filter");
+const bkgEl = document.querySelector(".bkg.hide");
+const membersProfileContainer = document.querySelector(".members-profile");
+const membersProfileEl = document.querySelector(".members-profile-view");
+let selectedMenu = 1;
+
+const openAndCloseMenu = function (state = "hide") {
+  if (state === "hide") menuContainer.classList.add("hide");
+  else if (state === "show") menuContainer.classList.remove("hide");
+};
+
+const renderMembers = function (data) {
+  if (data.length < 1) {
+    return `<h3>No member found :)</h3>`;
+  } else {
+    return data
+      .map(
+        (member) =>
+          `<div class="member" data-id="${member.id}">
+                <div class="details-container">
+                  <img
+                    src="/${member.photo}"
+                    alt="${member.name.split(" ")[0]}'s photo}"
+                    class="member-picture"
+                  />
+                  <h2 class="name">T/Dr. ${member.name}</h2>
+                </div>
+                <div class="buttons-container">
+                ${
+                  member.verified
+                    ? ""
+                    : `<button class="btn btn-verify-number">Verify member</button
+                  >`
+                }
+                  <button class="btn btn-add-payment">Add Payment</button
+                  >
+                  ${
+                    Date.now() > Date.parse(member.idExpiry) / 1000
+                      ? '<button class="btn btn-renew-id">Renew Id</button>'
+                      : ""
+                  }
+                  <button class="btn btn-delete-user">Delete user</button>
+                </div>
+              </div>`
+      )
+      .join("");
+  }
+};
+const clearInsertHtml = function (container, html) {
+  container.innerHTML = " ";
+
+  container.innerHTML = html;
+};
+
+const displaySelectedView = function (selected = 1) {
+  let viewOriginalHtml = ``;
+  let mainView = "";
+  views.forEach((view) => {
+    if (view === views[selected]) {
+      view.classList.remove("hide");
+      mainView = view.querySelector(".main-view");
+      viewOriginalHtml = mainView.innerHTML;
+      mainView.innerHTML = `<span class="loader"></span>`;
+    } else {
+      view.classList.add("hide");
+    }
+  });
+  setTimeout(() => {
+    mainView.innerHTML = "";
+    mainView.innerHTML = viewOriginalHtml;
+    views[selected].classList.remove("hide");
+  }, 1000);
+};
+
+const loadMembers = async function (memberName = "") {
+  try {
+    let res = "";
+    if (memberName !== "" && memberName !== " ")
+      res = await fetch(
+        `http://127.0.0.1:8090/api/v1/admin/457/member?name=${memberName}`
+      );
+    else res = await fetch(`http://127.0.0.1:8090/api/v1/admin/457/member`);
+
+    const resData = await res.json();
+    const { data: members } = resData;
+
+    const htmlStr = renderMembers(members);
+    clearInsertHtml(membersContainer, htmlStr);
+    paymentButtons = membersContainer.getElementsByClassName("btn-add-payment");
+
+    // membersContainer.innerHTML = " ";
+    // membersContainer.insertAdjacentHTML("afterbegin", htmlStr);
+    return members;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Showing first view
+displaySelectedView(0);
+loadMembers();
+
+menuEl.forEach((menuBox) => {
+  menuBox.addEventListener("click", function (e) {
+    e.preventDefault();
+    openAndCloseMenu("show");
+  });
+});
+// closing the menu
+btnClose.addEventListener("click", function (e) {
+  e.preventDefault();
+  openAndCloseMenu("hide");
+});
+// Adding eventListener to the menu items
+menuItems.forEach((menuItem, ind) => {
+  menuItem.addEventListener("click", function (e) {
+    e.preventDefault();
+    const clicked = e.target.closest(".menu-item");
+
+    if (clicked === menuItem) selectedMenu = ind;
+    displaySelectedView(selectedMenu);
+    openAndCloseMenu("hide");
+  });
+});
+
+// Searching for a user
+searchButton.addEventListener("search", async function (e) {
+  membersContainer.innerHTML = " ";
+  const members = await loadMembers(this.value);
+  const htmlStr = renderMembers(members);
+  membersViewEl.innerHTML = `<span class="loader"></span>`;
+  setTimeout(() => {
+    clearInsertHtml(
+      membersViewEl,
+      `<div class="member-profile">${htmlStr}</div>`
+    );
+    paymentButtons = membersContainer.getElementsByClassName("btn-add-payment");
+  }, 1000);
+});
+
+const makeRequest = async function (reqURL, data, method) {
+  try {
+    const reqOptions = {
+      method,
+    };
+    if (method === "POST") {
+      reqOptions.body = JSON.stringify(data);
+      reqOptions.headers = {
+        "Content-Type": "application/json",
+      };
+    } else {
+      reqOptions.headers = {
+        "Content-Type": "html/text",
+      };
+    }
+    const res = await fetch(reqURL, reqOptions);
+    const resData = res.json();
+    if (resData.status === "failed") throw resData;
+    return resData;
+  } catch (err) {
+    throw err;
+  }
+};
+membersViewEl.addEventListener("click", async function (e) {
+  try {
+    let obj = {};
+    let htmlString = `
+    <div class="holder-container">
+      <form  class="verify-member-form" >
+              <h3 class="caption">Verify User</h3>
+              <div class="dop-box box" style="display:none;">
+                <label for="annkId">Name:</label>
+                <input type="text" name="annkId" id="annkId" value="%%annkId%%" readonly="true">
+              </div>
+              <div class="dop-box box">
+                <label for="name">Name:</label>
+                <input type="text" name="name" id="name" value="%%name%%" readonly="true">
+              </div>
+              
+              <div class="dop-box box">
+                <label for="duesDate">Dues Month:</label>
+                <input type="date" name="datePaid" id="duesDate">
+              </div>
+              <div class="dop-box box">
+                <label for="amount">Amount:</label>
+                <input type="number" name="amount" id="amount" placeholder="Enter amount">
+              </div>
+              <div class="submit-box">
+                <button class="btn-verify">Add payment</button>
+              </div>
+            </form>
+    </div>
+    `;
+    if (e.target.closest(".member")) {
+      if (e.target.closest(".btn-add-payment")) {
+        bkgEl.classList.remove("hide");
+        bkgEl.innerHTML = " ";
+        const member = e.target.closest(".member");
+        const { id } = member.dataset;
+        const memberName = member.querySelector(".name").textContent;
+        htmlString = htmlString.replace("%%name%%", memberName);
+        htmlString = htmlString.replace(`%%annkId%%`, id);
+        bkgEl.innerHTML = htmlString;
+      }
+      // obj = {
+      //   annkId: id,
+      //   paymentType: "dues",
+      //   datePaid: "04/25/2022",
+      //   amount: 10,
+      //   name: memberName,
+      // };
+
+      // const data = await makeRequest("/api/v1/pay", obj, "POST");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+bkgEl.addEventListener("click", async function (e) {
+  const clicked = e.target;
+  const paymentForm = bkgEl.querySelector(".verify-member-form");
+  if (paymentForm)
+    paymentForm.addEventListener(
+      "submit",
+      function (e) {
+        e.preventDefault();
+      },
+      false
+    );
+  if (e.target.closest(".btn-verify")) {
+    const data = Object.fromEntries([...new FormData(paymentForm)]);
+    console.log(data);
+
+    const resData = await makeRequest("/api/v1/pay", data, "POST");
+    clearInsertHtml(bkgEl, `<span class="loader"></span>`);
+    setTimeout(() => {
+      clearInsertHtml(bkgEl, `<h3>${resData.message}</h3>`);
+    }, 2000);
+  }
+
+  // if (clicked.closest(".bkg")) this.classList.add("hide");
+});
+
+// Filtering member with fields
+btnGenerateprofile.addEventListener("click", async function (e) {
+  e.preventDefault();
+  const data = Object.fromEntries([...new FormData(formFilter)]);
+
+  const queryField = Object.entries(data).join("&").replaceAll(",", "=");
+  console.log(queryField);
+  const url = `/api/v1/admin/65d037f009dd7305b2568222/member?${queryField}`;
+  const resData = await makeRequest(url, null, "GET");
+  let profileHtml = `
+  
+          <span class="loader hide"></span>
+          <div class="prints-view">
+           
+            <div class="member-profile-print">
+              <div id="profile-print-area" class="profiles-header">
+                <header class="profile-header">
+                  <img src="./src/AANk logo.png" alt="" />
+                  <img src="./src/AANk logo.png" alt="" />
+                  <h2 class="company-name">AHABA NDURO NKABOM KUO</h2>
+                  <h3 class="company-name">(ANNK)</h3>
+                  <h3 class="company-name">BONO EAST - GHANA</h3>
+                  <h3 class="company-name">${resData.caption}</h3>
+                </header>
+                <div class="members-container">
+                  %%members%%
+                </div>
+              </div>
+              <div class="print"><button>print profiles</button></div>
+            </div>
+          </div>
+       
+  `;
+
+  let membersHtml = "";
+  const { data: members } = resData;
+  if (members.length > 0)
+    membersHtml = members
+      .map((member) => {
+        const propNames = Object.keys(member);
+        return propNames
+          .map((name) => {
+            return `<h3>
+            <span>${name}: </span>
+            <span> ${member[name]}</span>
+          </h3>`;
+          })
+          .join("");
+      })
+      .map(
+        (string) => `
+        <div class="member-box">
+                ${string}    
+        </div>
+      `
+      )
+      .join(" ");
+  else membersHtml = `<h3>No members found</h3>`;
+
+  profileHtml = profileHtml.replace("%%members%%", membersHtml);
+  clearInsertHtml(membersProfileEl, profileHtml);
+  console.log(resData);
+});
