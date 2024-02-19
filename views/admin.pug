@@ -1,5 +1,6 @@
 extends base 
 block script 
+    script(defer src="https://printjs-4de6.kxcdn.com/print.min.js") 
     script(defer src="/src/js/admin.js") 
 block content 
     .admin-page
@@ -141,32 +142,33 @@ block content
             .main-view.members-profile-view
                 span.loader.hide
                 .prints-view
-                    .member-profile-print
-                        #profile-print-area.profiles-header
-                            header.profile-header
-                                img(src='./src/AANk logo.png' alt='')
-                                img(src='./src/AANk logo.png' alt='')
-                                h2.company-name AHABA NDURO NKABOM KUO
-                                h3.company-acronym (ANNK)
-                                h3.company-location BONO EAST - GHANA
-                                h3.company-national NATIONAL PROFILE
-                            .members-container
-                                .member-box
-                                    h3
-                                        span Name: 
-                                        span  Kwaku Fosu
-                                    h3
-                                        span Position: 
-                                        span  Member
-                                    h3
-                                        span Phone Number: 
-                                        span  0554088124
-                                    h3
-                                        span Company name: 
-                                        span  Dua ma aduro
-                                    h3
-                                        span ID Expiry: 
-                                        span  12th July, 2025
-                                    img(src='src/images/male avatar.jpg' alt='')
+                    h3 Select fields to print and click generate pdf
+                    //- .member-profile-print
+                    //-     #profile-print-area.profiles-header
+                    //-         header.profile-header
+                    //-             img(src='/src/images/AANk logo.png' alt='')
+                    //-             img(src='/src/images/AANk logo.png' alt='')
+                    //-             h2.company-name AHABA NDURO NKABOM KUO
+                    //-             h3.company-acronym (ANNK)
+                    //-             h3.company-location BONO EAST - GHANA
+                    //-             h3.company-national NATIONAL PROFILE
+                    //-         .members-container
+                    //-             .member-box
+                    //-                 h3
+                    //-                     span Name: 
+                    //-                     span  Kwaku Fosu
+                    //-                 h3
+                    //-                     span Position: 
+                    //-                     span  Member
+                    //-                 h3
+                    //-                     span Phone Number: 
+                    //-                     span  0554088124
+                    //-                 h3
+                    //-                     span Company name: 
+                    //-                     span  Dua ma aduro
+                    //-                 h3
+                    //-                     span ID Expiry: 
+                    //-                     span  12th July, 2025
+                    //-                 img(src='src/images/male avatar.jpg' alt='')
                     .print
-                        button print profiles
+                        button(class="btn-print-profiles") print profiles
