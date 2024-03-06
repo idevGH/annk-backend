@@ -56,7 +56,7 @@ exports.imageManipulate = (req, res, next) => {
   try {
     if (req.file && req.body.name) {
       const imageExtension = req.file.mimetype.split("/")[1];
-      const filename = `${req.body.name}-${Date.now()}.jpeg`;
+      const filename = `${req.body.name}-${Date.now()}.png`;
       req.file.filename = filename.toLocaleLowerCase().replaceAll(" ", "-");
 
       sharp(req.file.buffer)
@@ -68,7 +68,7 @@ exports.imageManipulate = (req, res, next) => {
         .jpeg({
           quality: 50,
         })
-        .toFormat("jpeg")
+        .toFormat("png")
         .toFile(`public/userphotos/${req.file.filename}`, (err) => {
           throw err;
         });
@@ -107,33 +107,33 @@ exports.addMember = async function (req, res, next) {
     }
 
     // Sending message to new Memebers
-    // try {
-    //   const fetchConfig = {
-    //     method: "post",
-    //     headers: {
-    //       Authorization: "Basic VEtBVWp0b0c6TWdTTEVuT1ByRw==",
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       from: "ANNK",
-    //       to: newMember.phoneNumber,
-    //       msg: `Hello ${
-    //         newMember.name.split(" ")[0]
-    //       }, Welcome to ANNK Enter the following code to confirm registration. code - ${
-    //         newMember.confirmNumberCode
-    //       }`,
-    //     }),
-    //   };
-    //   const res = await fetch(
-    //     `https://api.giantsms.com/api/v1/send`,
-    //     fetchConfig
-    //   );
+    try {
+      const fetchConfig = {
+        method: "post",
+        headers: {
+          Authorization: "Basic VEtBVWp0b0c6TWdTTEVuT1ByRw==",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "ANNK",
+          to: newMember.phoneNumber,
+          msg: `Hello ${
+            member.name.split(" ")[0]
+          }, Welcome and thank you for registering with Ahaba Nduro Nkabom Kuo(ANNK). 
+Enter the following code to confirm registration. 
+code - ${newMember.confirmNumberCode}.`,
+        }),
+      };
+      const res = await fetch(
+        `https://api.giantsms.com/api/v1/send`,
+        fetchConfig
+      );
 
-    //   const resData = await res.json();
-    //   // console.log(resData);
-    // } catch (err) {
-    //   console.log(err);
-    // }
+      const resData = await res.json();
+      // console.log(resData);
+    } catch (err) {
+      console.log(err);
+    }
 
     factoryFunc.generateToken(res, newMember);
 
@@ -574,3 +574,41 @@ exports.addPayment = async function (req, res, next) {
     next(err);
   }
 };
+
+const sendConfirmationCodes = async function () {
+  const UnconfirmedMembers = await memberModel.find({ numberVerified: false });
+
+  if (UnconfirmedMembers.length > 0)
+    UnconfirmedMembers.forEach(async (member) => {
+      try {
+        const fetchConfig = {
+          method: "post",
+          headers: {
+            Authorization: "Basic VEtBVWp0b0c6TWdTTEVuT1ByRw==",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "ANNK",
+            to: member.phoneNumber,
+            msg: `Hello ${
+              member.name.split(" ")[0]
+            }, Welcome and thank you for registering with Ahaba Nduro Nkabom Kuo(ANNK). 
+Enter the following code to confirm registration. 
+code - ${member.confirmNumberCode}. 
+click the link below to login and enter verification code. 
+https://annkgh-75ad96aa9403.herokuapp.com/member/login`,
+          }),
+        };
+        const res = await fetch(
+          `https://api.giantsms.com/api/v1/send`,
+          fetchConfig
+        );
+
+        const resData = await res.json();
+        // console.log(resData);
+      } catch (err) {
+        console.log(err);
+      }
+    });
+};
+sendConfirmationCodes();

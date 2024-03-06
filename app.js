@@ -113,6 +113,7 @@ app.use((error, req, res, next) => {
       } else {
         return res.status(error.statusCode || 404).render("errorpage", {
           message: "Something went wrong, try again later.",
+          error,
         });
       }
     }
@@ -142,5 +143,12 @@ app.use((error, req, res, next) => {
     }
   }
 });
+
+// // const string = `im that boy called Ernest. boy boy`;
+// // const regex = /Boy/i;
+// const string = `im fol fil called Ernest. foul boy ful`;
+// const regex = /f[oui]l/g;
+// // console.log(regex.test(string));
+// console.log(string.match(regex));
 
 module.exports = app;

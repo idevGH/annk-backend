@@ -103,7 +103,7 @@ const loadMembers = async function (memberName = "") {
     // membersContainer.insertAdjacentHTML("afterbegin", htmlStr);
     return members;
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 };
 
@@ -224,7 +224,7 @@ membersViewEl.addEventListener("click", async function (e) {
       // const data = await makeRequest("/api/v1/pay", obj, "POST");
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 });
 
@@ -241,7 +241,7 @@ bkgEl.addEventListener("click", async function (e) {
     );
   if (e.target.closest(".btn-verify")) {
     const data = Object.fromEntries([...new FormData(paymentForm)]);
-    console.log(data);
+    // console.log(data);
 
     const resData = await makeRequest("/api/v1/pay", data, "POST");
     clearInsertHtml(bkgEl, `<span class="loader"></span>`);
@@ -259,7 +259,7 @@ btnGenerateprofile.addEventListener("click", async function (e) {
   const data = Object.fromEntries([...new FormData(formFilter)]);
 
   const queryField = Object.entries(data).join("&").replaceAll(",", "=");
-  console.log(queryField);
+
   const url = `/api/v1/admin/65d037f009dd7305b2568222/member?${queryField}`;
   const resData = await makeRequest(url, null, "GET");
   let profileHtml = `
@@ -306,6 +306,26 @@ btnGenerateprofile.addEventListener("click", async function (e) {
             </h3>`;
             else if (name === "verified" || name === "id" || name === "_id")
               return ``;
+            else if (name === "name")
+              return `<h3>
+              <span>Name: </span>
+              <span> ${member.name}</span>
+            </h3>`;
+            else if (name === "phoneNumber")
+              return `<h3>
+              <span>Phone number: </span>
+              <span> ${member.phoneNumber}</span>
+            </h3>`;
+            else if (name === "companyName")
+              return `<h3>
+              <span>Company name: </span>
+              <span> ${member.companyName}</span>
+            </h3>`;
+            else if (name === "position")
+              return `<h3>
+              <span>Position: </span>
+              <span> ${member.position}</span>
+            </h3>`;
             else
               return `<h3>
             <span>${name}: </span>
@@ -401,7 +421,7 @@ membersProfileEl.addEventListener("click", function (e) {
         `,
       });
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   }
 });

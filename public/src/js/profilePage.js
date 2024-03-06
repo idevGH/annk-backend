@@ -104,4 +104,11 @@ function payWithPaystack(e) {
   }
 }
 
-paymentForm.addEventListener("submit", payWithPaystack, false);
+// paymentForm.addEventListener("submit", payWithPaystack, false);
+paymentForm.addEventListener(
+  "submit",
+  function (e) {
+    alert("Feature not implemented yet.");
+  },
+  false
+);
