@@ -611,4 +611,4 @@ https://annkgh-75ad96aa9403.herokuapp.com/member/login`,
       }
     });
 };
-sendConfirmationCodes();
+// sendConfirmationCodes();
