@@ -364,68 +364,7 @@ membersProfileEl.addEventListener("click", function (e) {
         printable: "profile-print-area",
         type: "html",
         targetStyles: ["*"],
-        css: `
-        .prints-view .member-profile-print .profile-header {
-  background-color: rgba(164, 255, 141, 0.349);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.prints-view .member-profile-print .profile-header h2 {
-  font-size: 2.8rem;
-}
-.prints-view .member-profile-print .profile-header img {
-  width: 6.8rem;
-  position: absolute;
-  top: 0;
-}
-.prints-view .member-profile-print .profile-header img:nth-child(1) {
-  left: 15%;
-}
-.prints-view .member-profile-print .profile-header img:nth-child(2) {
-  right: 15%;
-}
-.prints-view .member-profile-print .members-container {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-  gap: 0.4rem;
-}
-.prints-view .member-profile-print .members-container .member-box {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  padding: 0.4rem;
-  height: 20rem;
-}
-.prints-view .member-profile-print .members-container .member-box h3 {
-  display: grid;
-  grid-template-columns: 2fr 8fr;
-  gap: 1rem;
-  font-size: 1.8rem;
-}
-.prints-view .member-profile-print .members-container .member-box img {
-  width: 12rem;
-  position: absolute;
-  top: 10px;
-  right: 50px;
-  outline: 2px solid black;
-  outline-offset: 5px;
-}
-.prints-view .member-profile-print .members-container .member-box:nth-child(odd) {
-  background-color: rgba(128, 128, 128, 0.068);
-}
-.prints-view .member-profile-print .members-container .member-box:nth-child(even) {
-  background-color: rgba(183, 255, 165, 0.068);
-}
-.prints-view .print button {
-  padding: 0.4rem 0.8rem;
-  font-weight: 700;
-}
-        `,
+        css: `https://annkgh-75ad96aa9403.herokuapp.com/src/css/style.css`,
       });
     } catch (err) {
       // console.log(err);

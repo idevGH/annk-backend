@@ -217,7 +217,7 @@ exports.getAllMembers = async function (req, res, next) {
 
     const selectFields = {
       name: 1,
-      photo: 1,
+      // photo: 1,
       verified: 1,
       idExpiry: 1,
     };
@@ -231,6 +231,7 @@ exports.getAllMembers = async function (req, res, next) {
     if (query.position && query.position === "on") selectFields.position = 1;
     if (query.companyName && query.companyName === "on")
       selectFields.companyName = 1;
+    if (query.photo && query.photo === "on") selectFields.photo = 1;
 
     const findQuery = memberModel.find({});
     if (query.name) findQuery.find({ name: { $regex: query.name } });
