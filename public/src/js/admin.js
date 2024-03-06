@@ -15,6 +15,13 @@ const membersProfileContainer = document.querySelector(".members-profile");
 
 const btnPrint = document.querySelector(".btn-print-profiles");
 const membersProfileEl = document.querySelector(".members-profile-view");
+
+const imgs = document.querySelectorAll("img").forEach((img) => {
+  img.addEventListener("error", function (e) {
+    img.src = "/src/images/male avatar.jpg";
+  });
+});
+
 let selectedMenu = 1;
 
 const openAndCloseMenu = function (state = "hide") {
@@ -424,10 +431,4 @@ membersProfileEl.addEventListener("click", function (e) {
       // console.log(err);
     }
   }
-});
-
-const imgs = document.querySelectorAll("img").forEach((img) => {
-  img.addEventListener("error", function (e) {
-    img.src = "/src/images/male avatar.jpg";
-  });
 });

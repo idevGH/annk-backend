@@ -224,7 +224,7 @@ exports.getAllMembers = async function (req, res, next) {
     let caption = undefined;
     if (query.region && query.region !== "All")
       caption = `${query.region.toLocaleUpperCase()}AL PROFILES `;
-    if (query.region && query.region === "All") caption = `NAIONAL PROFILES `;
+    if (query.region && query.region === "All") caption = `NATIONAL PROFILES `;
 
     if (query.phoneNumber && query.phoneNumber === "on")
       selectFields.phoneNumber = 1;
