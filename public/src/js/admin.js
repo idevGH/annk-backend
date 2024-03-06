@@ -89,10 +89,8 @@ const loadMembers = async function (memberName = "") {
   try {
     let res = "";
     if (memberName !== "" && memberName !== " ")
-      res = await fetch(
-        `http://127.0.0.1:8090/api/v1/admin/457/member?name=${memberName}`
-      );
-    else res = await fetch(`http://127.0.0.1:8090/api/v1/admin/457/member`);
+      res = await fetch(`/api/v1/admin/457/member?name=${memberName}`);
+    else res = await fetch(`/api/v1/admin/457/member`);
 
     const resData = await res.json();
     const { data: members } = resData;
