@@ -276,7 +276,7 @@ btnGenerateprofile.addEventListener("click", async function (e) {
            
             <div class="member-profile-print">
               <div id="profile-print-area" class="profiles-header style:"margin-bottom:38px;">
-                <header class="profile-header" style="display:flex;flex-direction:column; align-items:center;justify-content:center;">
+                <header class="profile-header" style="display:flex;flex-direction:column; align-items:center;justify-content:center; margin-bottom:100px;">
                   <img style="width:100px; position: absolute; top:5px;left:40px;" src="/src/images/AANk logo.png" alt="" />
                   <img style="width:100px; position: absolute; top:5px;right:40px;" src="/src/images/AANk logo.png" alt="" />
                   <h2 class="company-name">AHABA NDURO NKABOM KUO</h2>
