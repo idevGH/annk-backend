@@ -343,7 +343,7 @@ btnGenerateprofile.addEventListener("click", async function (e) {
       })
       .map(
         (string) => `
-        <div class="member-box" style="margin-bottom:10px;position:relative; height: 250px;">
+        <div class="member-box" style="margin-bottom:10px;position:relative; padding:10px;">
                 ${string}    
         </div>
       `
