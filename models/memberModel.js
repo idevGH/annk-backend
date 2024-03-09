@@ -19,6 +19,10 @@ const memberSchema = mongoose.Schema(
       required: [true, "Enter your name"],
       minLength: [2, "Name cannot be shorter than 2 characters"],
     },
+    nationalId: {
+      type: String,
+      // unique: [true, "Annk Id already exist."],
+    },
     dob: {
       type: Date,
       required: [true, "Please provide Date of Birth"],
@@ -132,6 +136,9 @@ const memberSchema = mongoose.Schema(
     active: {
       type: Boolean,
       default: true,
+    },
+    photoBuffer: {
+      type: String,
     },
   },
   {

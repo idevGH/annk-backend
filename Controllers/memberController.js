@@ -58,7 +58,9 @@ exports.imageManipulate = (req, res, next) => {
       const imageExtension = req.file.mimetype.split("/")[1];
       const filename = `${req.body.name}-${Date.now()}.png`;
       req.file.filename = filename.toLocaleLowerCase().replaceAll(" ", "-");
-
+      // storing the buffer to the body
+      req.body.photoBuffer = JSON.stringify(req.file.buffer);
+      console.log();
       sharp(req.file.buffer)
         .resize(800, 800, {
           // fit: "contain",
@@ -82,20 +84,32 @@ exports.imageManipulate = (req, res, next) => {
 exports.addMember = async function (req, res, next) {
   try {
     const { body } = req;
+    // Creating annkID to appear on ID cards
+    let num = await memberModel.find({}).count();
+    num = num.toLocaleString().padStart(4, 0);
 
+    let regionShort = body.region.split(" ");
+
+    if (regionShort.length > 2) regionShort.splice(-1);
+
+    body.nationalId = `ANNK/ID/${regionShort
+      .map((namePart) => namePart.split("")[0])
+      .join("")}/${num}`;
+    // Checking if a file(photo) was uploaded
     if (req.file !== undefined && req.file.filename)
       body.photo = `userphotos/${req.file.filename}`;
     else body.photo = undefined;
 
     let newMember = await memberModel.create(body);
     newMember.password = await newMember.encryptpassword(newMember.password);
-    newMember = await memberModel.findByIdAndUpdate(newMember._id, newMember);
 
+    // Updating the member details
+    newMember = await memberModel.findByIdAndUpdate(newMember._id, newMember);
     // Creating QrCode file(png)
     try {
       qrcode.toFile(
         `public/qrCodes/${newMember.slug}.png`,
-        `${req.protocol}://${req.host}/scan/${newMember._id}`,
+        `${req.protocol}://${req.hostname}/scan/${newMember._id}`,
         { type: "" },
         (err) => {
           console.log(err);
@@ -118,12 +132,13 @@ exports.addMember = async function (req, res, next) {
           from: "ANNK",
           to: newMember.phoneNumber,
           msg: `Hello ${
-            member.name.split(" ")[0]
+            newMember.name.split(" ")[0]
           }, Welcome and thank you for registering with Ahaba Nduro Nkabom Kuo(ANNK). 
 Enter the following code to confirm registration. 
 code - ${newMember.confirmNumberCode}.`,
         }),
       };
+
       const res = await fetch(
         `https://api.giantsms.com/api/v1/send`,
         fetchConfig
@@ -575,41 +590,3 @@ exports.addPayment = async function (req, res, next) {
     next(err);
   }
 };
-
-const sendConfirmationCodes = async function () {
-  const UnconfirmedMembers = await memberModel.find({ numberVerified: false });
-
-  if (UnconfirmedMembers.length > 0)
-    UnconfirmedMembers.forEach(async (member) => {
-      try {
-        const fetchConfig = {
-          method: "post",
-          headers: {
-            Authorization: "Basic VEtBVWp0b0c6TWdTTEVuT1ByRw==",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            from: "ANNK",
-            to: member.phoneNumber,
-            msg: `Hello ${
-              member.name.split(" ")[0]
-            }, Welcome and thank you for registering with Ahaba Nduro Nkabom Kuo(ANNK). 
-Enter the following code to confirm registration. 
-code - ${member.confirmNumberCode}. 
-click the link below to login and enter verification code. 
-https://annkgh-75ad96aa9403.herokuapp.com/member/login`,
-          }),
-        };
-        const res = await fetch(
-          `https://api.giantsms.com/api/v1/send`,
-          fetchConfig
-        );
-
-        const resData = await res.json();
-        // console.log(resData);
-      } catch (err) {
-        console.log(err);
-      }
-    });
-};
-// sendConfirmationCodes();
